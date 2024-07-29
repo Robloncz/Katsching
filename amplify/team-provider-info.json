@@ -1,0 +1,41 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-katsching-dev-b6aa1-authRole",
+      "UnauthRoleArn": "arn:aws:iam::700802536285:role/amplify-katsching-dev-b6aa1-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::700802536285:role/amplify-katsching-dev-b6aa1-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-katsching-dev-b6aa1-deployment",
+      "UnauthRoleName": "amplify-katsching-dev-b6aa1-unauthRole",
+      "StackName": "amplify-katsching-dev-b6aa1",
+      "StackId": "arn:aws:cloudformation:eu-central-1:700802536285:stack/amplify-katsching-dev-b6aa1/d14b24b0-4dca-11ef-b2db-0a7a84cf33ed",
+      "AmplifyAppId": "d3igya7apoly3j"
+    }
+  },
+  "maxrizz": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-katsching-maxrizz-6cc4b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::700802536285:role/amplify-katsching-maxrizz-6cc4b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::700802536285:role/amplify-katsching-maxrizz-6cc4b-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-katsching-maxrizz-6cc4b-deployment",
+      "UnauthRoleName": "amplify-katsching-maxrizz-6cc4b-unauthRole",
+      "StackName": "amplify-katsching-maxrizz-6cc4b",
+      "StackId": "arn:aws:cloudformation:eu-central-1:700802536285:stack/amplify-katsching-maxrizz-6cc4b/14daacf0-4dcb-11ef-a913-06dabb8aab9f",
+      "AmplifyAppId": "d3igya7apoly3j",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-katsching-maxrizz-6cc4b-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "katsching7c491de0": {}
+      },
+      "function": {
+        "katsching7c491de0PostConfirmation": {
+          "GROUP": "Katschingas",
+          "deploymentBucketName": "amplify-katsching-maxrizz-6cc4b-deployment",
+          "s3Key": "amplify-builds/katsching7c491de0PostConfirmation-55737530792b3879776d-build.zip"
+        }
+      }
+    }
+  }
+}
