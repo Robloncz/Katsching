@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import './Popup.css';
@@ -9,6 +9,21 @@ const Popup = ({ isVisible, togglePopup, addPlayer }) => {
     const [name, setName] = useState('');
     const [katschings, setKatschings] = useState(1); // Default value of Katschings
     const [comment, setComment] = useState(''); // State to manage the comment
+
+    const popupRef = useRef(null); // Ref for the popup container
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                togglePopup(); // Close the popup if clicked outside
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [togglePopup]);
 
     if (!isVisible) return null;
 
@@ -27,7 +42,7 @@ const Popup = ({ isVisible, togglePopup, addPlayer }) => {
 
     return (
         <div className="popup-overlay">
-            <div className="popup-container">
+            <div className="popup-container" ref={popupRef}>
                 <div className="popup-content">
                     <div className="popup-title">Füge einen neuen Wicht hinzu.</div>
                     <div className="popup-input-group">

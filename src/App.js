@@ -6,7 +6,6 @@ import '@aws-amplify/ui-react/styles.css';
 import {
   withAuthenticator,
   Button,
-  Heading,
   Image,
   View,
   Card,
@@ -14,14 +13,18 @@ import {
 import { studioTheme } from "./ui-components";
 import Popup from './ui/Popup';
 import KatschingPopup from './ui/KatschingPopup';
-import ErrorBoundary from './ErrorBoundary'; // Import ErrorBoundary
-
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 function App({ signOut }) {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isKatschingPopupVisible, setIsKatschingPopupVisible] = useState(false);
-  const [players, setPlayers] = useState([]); // State to manage players
+  const [players, setPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [history, setHistory] = useState([]); // State to manage history
+  const [history, setHistory] = useState([]);
+
+  // Function to sort players by 'katschings' in descending order
+  const sortPlayersByKatschings = (players) => {
+    return [...players].sort((a, b) => b.katschings - a.katschings);
+  };
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
@@ -33,30 +36,36 @@ function App({ signOut }) {
   };
 
   const addPlayer = (name, emoji, katschings, comment) => {
-    const newPlayer = { name, emoji, katschings, lastKatsching: new Date().toLocaleDateString() };
-    setPlayers([...players, newPlayer]);
+    const fullName = `${name} ${emoji}`;
+    const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
+    const newPlayer = { name: fullName, emoji, katschings, lastKatsching: new Date().toLocaleDateString() };
+    const updatedPlayers = sortPlayersByKatschings([...players, newPlayer]);
+    setPlayers(updatedPlayers);
     setHistory([{
       time: new Date().toLocaleTimeString(),
-      event: `${name} wurde als neuer Spieler hinzugefügt.`,
-      comments: comment // Include the comment in the history
-    }, ...history]); // Add new history entry to the start
+      event: `${fullName} wurde als neuer Spieler hinzugefügt. ${katschings} ${katschingText}`,
+      comments: comment
+    }, ...history]);
   };
 
   const addKatschings = (katschings, comment) => {
-    setPlayers(players.map(player => 
+    const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
+    const updatedPlayers = players.map(player =>
       player === selectedPlayer ? { ...player, katschings: player.katschings + katschings, lastKatsching: new Date().toLocaleDateString() } : player
-    ));
+    );
+    setPlayers(sortPlayersByKatschings(updatedPlayers));
     setHistory([{
       time: new Date().toLocaleTimeString(),
-      event: `${katschings} Katsching(s) für ${selectedPlayer.name} von Mir`,
-      comments: comment // Include the comment in the history
-    }, ...history]); // Add new history entry to the start
+      event: `${katschings} ${katschingText} für ${selectedPlayer.name}`,
+      comments: comment
+    }, ...history]);
     setIsKatschingPopupVisible(false);
-    setSelectedPlayer(null); // Reset selected player
+    setSelectedPlayer(null);
   };
 
+
+
   return (
-    <ErrorBoundary> {/* Wrap the entire app with ErrorBoundary */}
       <ThemeProvider theme={studioTheme}>
         <View className="App">
           <div className="App-header">
@@ -95,26 +104,28 @@ function App({ signOut }) {
           </Card>
 
           {/* History Table */}
-          <Card className="history-table-container">
-            <div className="history-table-header">
-              <div className="history-table-header-cell">
-                <div className="history-table-header-text">Uhrzeit</div>
-              </div>
-              <div className="history-table-header-cell">
-                <div className="history-table-header-text">Event</div>
-              </div>
-              <div className="history-table-header-cell">
-                <div className="history-table-header-text">Kommentar</div>
-              </div>
-            </div>
-            {history.map((entry, index) => (
-              <div key={index} className="history-table-row">
-                <div className="history-table-cell">{entry.time}</div>
-                <div className="history-table-cell">{entry.event}</div>
-                <div className="history-table-cell">{entry.comments}</div>
-              </div>
-            ))}
-          </Card>
+        <Card className="history-table-container">
+          <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+            <Table stickyHeader style={{ tableLayout: "fixed" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ width: "15%", fontFamily: 'Irish Grover' }}>Uhrzeit</TableCell>
+                  <TableCell style={{ width: "70%", fontFamily: 'Irish Grover' }}>Event</TableCell>
+                  <TableCell style={{ width: "20%", fontFamily: 'Irish Grover' }}>Kommentar</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {history.map((entry, index) => (
+                  <TableRow key={index}>
+                    <TableCell style={{ width: "10%", fontFamily: 'Irish Grover' }}>{entry.time}</TableCell>
+                    <TableCell style={{ width: "70%", fontFamily: 'Irish Grover' }}>{entry.event}</TableCell>
+                    <TableCell style={{ width: "20%", fontFamily: 'Irish Grover' }}>{entry.comments}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Card>
 
           <Popup isVisible={isPopupVisible} togglePopup={togglePopup} addPlayer={addPlayer} />
           {selectedPlayer && (
@@ -127,7 +138,6 @@ function App({ signOut }) {
 
         </View>
       </ThemeProvider>
-    </ErrorBoundary>
   );
 }
 

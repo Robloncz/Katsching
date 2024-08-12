@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Popup.css';
 
 const KatschingPopup = ({ isVisible, togglePopup, addKatschings }) => {
     const [katschings, setKatschings] = useState(0);
     const [comment, setComment] = useState(''); // State to manage the comment
+
+    const popupRef = useRef(null); // Ref for the popup container
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                togglePopup(); // Close the popup if clicked outside
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [togglePopup]);
 
     if (!isVisible) return null;
 
@@ -16,7 +31,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings }) => {
 
     return (
         <div className="popup-overlay">
-            <div className="popup-container">
+            <div className="popup-container" ref={popupRef}>
                 <div className="popup-content">
                     <div className="popup-subtitle">Gib die Anzahl der Katschings an.</div>
                     <div className="popup-counter-group">

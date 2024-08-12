@@ -169,6 +169,9 @@ body {
   gap: 1px;
   border-radius: 10px; /* Add round edges */
   margin-top: 20px; /* Add some space above the history table */
+  z-index: 1;
+  overflow: hidden; /* Ensure the container does not expand */
+  max-height: 600px;
 }
 
 .history-table-header {
@@ -192,10 +195,7 @@ body {
   justify-content: flex-start; /* Align the first cell to the left */
 }
 
-.history-table-cell:nth-child(2)
-{
-  align-items: left;
-}
+
 .history-table-header-cell:last-child {
   justify-content: flex-end; /* Align the last cell to the right */
 }
@@ -211,6 +211,7 @@ body {
   word-wrap: break-word;
 }
 
+
 /* History Table Row Styles */
 .history-table-row {
   display: flex;
@@ -224,34 +225,33 @@ body {
   height: auto;
 }
 
+
 .history-table-cell {
+  flex: 1; /* Allow cells to grow and shrink */
   display: flex;
-  justify-content: center; /* Center the contents */
-  align-items: center; /* Center the contents */
+  justify-content: center;
+  align-items: center;
   padding: 0 15px;
   font-family: 'Irish Grover';
   color: #0d1a26;
   font-size: 16px;
   font-weight: 400;
   line-height: 18px;
-  white-space: normal; /* Allow text to wrap */
-  overflow-wrap: break-word; /* Break long words */
-  word-break: break-all; /* Break words at any point */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-all;
   height: auto;
 }
 
-.history-table-cell:first-child {
-  flex: 0.5; /* Smaller flex value for the time cell */
-  justify-content: flex-start; /* Align the first cell to the left */
-}
 
-.history-table-cell:nth-child(2) {
-  flex: 3; /* Larger flex value for the event cell */
-  justify-content: left; /* Center the contents */
+.table-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .history-table-cell:last-child {
-  flex: 2; /* Largest flex value for the comment cell */
-  justify-content: flex-end; /* Align the last cell to the right */
+  flex-grow: 2; /* Allow the last cell to grow more */
   white-space: normal; /* Allow text to wrap */
 }
+
