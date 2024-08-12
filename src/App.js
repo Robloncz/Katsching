@@ -1,7 +1,8 @@
+import './App.css';
 import React, { useState, useEffect } from 'react';
 import logo from './alt.png';
 import { ThemeProvider } from "@aws-amplify/ui-react";
-import './App.css';
+
 import '@aws-amplify/ui-react/styles.css';
 import {
   withAuthenticator,
