@@ -1,0 +1,28 @@
+/* Add the styles below to your existing Popup.css file */
+
+.popup-emoji-picker {
+    position: relative;
+}
+
+.selected-emoji {
+    width: 272px;
+    height: 34px;
+    padding: 2px 7px;
+    background: var(--secondary-bg);
+    border-radius: 42px;
+    box-shadow: var(--input-shadow);
+    border: none;
+    font-size: var(--font-size-main);
+    font-family: var(--font-family-main);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.emoji-mart {
+    position: absolute;
+    top: 40px; /* Adjust position as needed */
+    z-index: 1000; /* Ensure the picker appears above other elements */
+}

@@ -1,0 +1,39 @@
+type KatschingTable @model @auth(rules: [{allow: public, operations: [read, update]}]) {
+  id: ID!
+  Player: String
+  Emoji: String
+  Katschings: Int
+  LastKatschingID: ID
+  LastKatsching: KatschingDetails @hasOne(fields: ["LastKatschingID"])
+}
+
+type HistoryTable @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  wicht: String
+  Katsching: [KatschingDetails] @hasMany(indexName: "byHistoryTable", fields: ["id"])
+  vollstrecker: String
+  numKatsching: String
+  isCommented: Boolean
+  comments: [String]
+  CommentDetails: [CommentDetails] @hasMany(indexName: "byHistoryTable", fields: ["id"])
+}
+
+type KatschingDetails @model @auth(rules: [{allow: public, operations: [create, read]}, {allow: owner}]) {
+  id: ID!
+  vollstrecker: ID
+  wicht: ID
+  numKatsching: Int
+  is_superKatsching: Boolean
+  dateTime: AWSDateTime
+  historytableID: ID! @index(name: "byHistoryTable")
+  katschingtableID: ID! @index(name: "byKatschingTable")
+}
+
+type CommentDetails @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  comment: String
+  Player: String
+  dateTime: AWSDateTime
+  katschingtableID: ID! @index(name: "byKatschingTable")
+  historytableID: ID! @index(name: "byHistoryTable")
+}

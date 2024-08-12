@@ -35,6 +35,9 @@
           "deploymentBucketName": "amplify-katsching-maxrizz-6cc4b-deployment",
           "s3Key": "amplify-builds/katsching7c491de0PostConfirmation-55737530792b3879776d-build.zip"
         }
+      },
+      "api": {
+        "Katsching": {}
       }
     }
   }

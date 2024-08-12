@@ -1,31 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
+
+:root {
+  --primary-color: #DCDEE0;
+  --secondary-color: #89949F; /* Change this to your desired color */
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+}
+body {
+  background-image: var(--gradient-top-bottom);
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: visibleFill;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 5s linear;
-  }
-}
-
-.App-header {
-  background-color: #00e3fc;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #171a1b;
+.App-logo {
+  height: 10vmin;
+  pointer-events: visibleFill;
+  animation: App-logo-spin infinite 10s linear;
+}
+
+.App-header {
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: right;
+  /* add padding right */
+  padding-right: 15px;
+  font-size: calc(10px + 2vmin);
+  width: 100%;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +41,217 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.mainscreen-card {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+/* Table Styling */
+.table-container {
+  width: 80vw;
+  height: 50hw;
+  padding: 11px 20px;
+  background: #dcdee0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1px;
+  border-radius: 10px; /* add round edges */
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.table-header-cell {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* Center the contents */
+  align-items: center; /* Center the contents */
+  background: #dcdee0;
+  height: 18px;
+  padding: 0 15px;
+  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+}
+
+.table-header-cell:last-child {
+  width: 0px;
+}
+
+.table-header-text {
+  text-align: center;
+  color: #0d1a26;
+  font-size: 12px;
+  font-family: 'Irish Grover';
+  font-weight: 700;
+  text-decoration: underline;
+  line-height: 18px;
+  word-wrap: break-word;
+}
+
+/* Table Styles */
+.table-row {
+  display: flex;
+  align-items: center; /* Center the contents */
+  width: 100%;
+}
+
+.table-cell {
+  flex: 1; /* This makes the cells take up equal space */
+  display: flex;
+  justify-content: center; /* Center the contents */
+  align-items: center; /* Center the contents */
+  background: #dcdee0;
+  padding: 0 15px;
+  font-family: 'Irish Grover';
+  color: #0d1a26;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: normal;
+  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+}
+
+/* Add Player Button Styling */
+.add-player-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.add-player-button {
+  padding: 10px 20px;
+  /* add distance */
+  margin-top: 20px;
+  background: #EFF0F0;
+  border-radius: 23px;
+  color: black;
+  font-size: 12px;
+  font-family: 'Irish Grover';
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Add this to your existing CSS */
+.katsching-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Adjust the gap as needed */
+}
+
+.add-katsching-button {
+  background: #EFF0F0;
+  border-radius: 30%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center; /* Center the contents */
+  align-items: center; /* Center the contents */
+  cursor: pointer;
+  margin-left: 0;
+}
+
+/* History Table Styling */
+.history-table-container {
+  width: 80vw;
+  padding: 11px 20px;
+  background: #dcdee0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1px;
+  border-radius: 10px; /* Add round edges */
+  margin-top: 20px; /* Add some space above the history table */
+}
+
+.history-table-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.history-table-header-cell {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* Center the contents */
+  align-items: center; /* Center the contents */
+  background: #dcdee0;
+  height: 18px;
+  padding: 0 15px;
+  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+}
+
+.history-table-header-cell:first-child {
+  justify-content: flex-start; /* Align the first cell to the left */
+}
+
+.history-table-cell:nth-child(2)
+{
+  align-items: left;
+}
+.history-table-header-cell:last-child {
+  justify-content: flex-end; /* Align the last cell to the right */
+}
+
+.history-table-header-text {
+  text-align: center;
+  color: #0d1a26;
+  font-size: 12px;
+  font-family: 'Irish Grover';
+  font-weight: 700;
+  text-decoration: underline;
+  line-height: 18px;
+  word-wrap: break-word;
+}
+
+/* History Table Row Styles */
+.history-table-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #EFF0F0;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+  height: auto;
+}
+
+.history-table-cell {
+  display: flex;
+  justify-content: center; /* Center the contents */
+  align-items: center; /* Center the contents */
+  padding: 0 15px;
+  font-family: 'Irish Grover';
+  color: #0d1a26;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: normal; /* Allow text to wrap */
+  overflow-wrap: break-word; /* Break long words */
+  word-break: break-all; /* Break words at any point */
+  height: auto;
+}
+
+.history-table-cell:first-child {
+  flex: 0.5; /* Smaller flex value for the time cell */
+  justify-content: flex-start; /* Align the first cell to the left */
+}
+
+.history-table-cell:nth-child(2) {
+  flex: 3; /* Larger flex value for the event cell */
+  justify-content: left; /* Center the contents */
+}
+
+.history-table-cell:last-child {
+  flex: 2; /* Largest flex value for the comment cell */
+  justify-content: flex-end; /* Align the last cell to the right */
+  white-space: normal; /* Allow text to wrap */
 }
