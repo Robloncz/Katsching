@@ -221,5 +221,5 @@ function App({ signOut }) {
     </View>
   );
 }  
-
+// be proud bro... it works.
 export default withAuthenticator(App);
