@@ -40,23 +40,36 @@ function App({ signOut }) {
   }
 
   const fetchAllData = useCallback(async () => {
-    try {
-      // Fetch players and history after DataStore has started
-      const playersData = await DataStore.query(Player);
-      setPlayers(sortPlayersByKatschings(playersData));
-  
-      const historyData = await DataStore.query(HistoryEntry);
-      setHistory(sortHistoryByTime(historyData));
-    } catch (err) {
-      console.error('Error fetching data:', err);
+    let retryCount = 0;
+    const maxRetries = 5;
+
+    while (retryCount < maxRetries) {
+      try {
+        if (DataStore.isStarted) {
+          const playersData = await DataStore.query(Player);
+          setPlayers(sortPlayersByKatschings(playersData));
+      
+          const historyData = await DataStore.query(HistoryEntry);
+          setHistory(sortHistoryByTime(historyData));
+          return; // Exit the loop on success
+        }
+      } catch (err) {
+        console.error('Error fetching data, retrying:', err);
+        retryCount++;
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retrying
+      }
     }
+
+    console.error('Failed to fetch data after multiple retries');
   }, []);
 
   useEffect(() => {
     const syncData = async () => {
       try {
-        await DataStore.clear();
-        await DataStore.start();
+        // Ensure DataStore is stopped and cleared
+        await DataStore.stop(); // Ensure DataStore is stopped before clearing
+        await DataStore.clear(); // Clear DataStore state
+        await DataStore.start(); // Start DataStore
         
         await fetchAllData();  
         setLoading(false);  // Set loading to false once data is fetched
