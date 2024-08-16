@@ -112,15 +112,14 @@
 }
 
 .popup-counter {
-    width: 48px;
-    height: 48px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
+    width: 20%;
+    padding: 2px 7px;
+    background: var(--secondary-bg);
+    border-radius: 42px;
+    box-shadow: var(--input-shadow);
+    border: none;
     cursor: pointer;  /* Makes the counter behave like a button */
+    align-items: center;
 }
 
 .popup-counter::before {

@@ -40,6 +40,13 @@ const Popup = ({ isVisible, togglePopup, addPlayer }) => {
         setComment(''); // Reset the comment input
     };
 
+    const handleKatschingsChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        if (!isNaN(value) && value >= 0) {
+            setKatschings(value);
+        }
+    };
+
     return (
         <div className="popup-overlay">
             <div className="popup-container" ref={popupRef}>
@@ -75,7 +82,12 @@ const Popup = ({ isVisible, togglePopup, addPlayer }) => {
                         <div className="popup-counter minus" onClick={() => setKatschings(katschings > 0 ? katschings - 1 : 0)}>
                             <span>-</span>
                         </div>
-                        <div className="popup-counter-value">{katschings}</div>
+                        <input
+                            className="popup-counter"
+                            type="number"
+                            value={katschings}
+                            onChange={handleKatschingsChange}
+                        />
                         <div className="popup-counter plus" onClick={() => setKatschings(katschings + 1)}>
                             <span>+</span>
                         </div>

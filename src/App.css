@@ -151,10 +151,14 @@ body {
 }
 
 .update-button { 
-  justify-content: right !important;
+  justify-content: center !important;
   border: none !important;
-  font-size: 30px !important;
-  padding-top: 0px !important;
+  font-size: 15px !important;
+  height: auto !important;
+  font-family: "Irish Grover" !important;
+  font-weight: 300 !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+  border-radius: 30%;
 }
 
 /* Add this to your existing CSS */
@@ -165,16 +169,35 @@ body {
   gap: 10px !important; /* Adjust the gap as needed */
 }
 
+div.katsching-counter{
+  align-items: left !important;
+  width: 10px !important;
+}
 .add-katsching-button {
   background: #EFF0F0 !important;
   border-radius: 30% !important;
   width: 24px !important;
   height: 24px !important;
   display: flex !important;
-  justify-content: center !important; /* Center the contents */
+  justify-content: rechts !important; /* Center the contents */
   align-items: center !important; /* Center the contents */
   cursor: pointer !important;
   margin-left: 0 !important;
+}
+
+.copy-to-clipboard-button {
+  padding: 10px 20px !important;
+  /* add distance */
+  margin-top: 20px !important;
+  margin-left: 20px !important;
+  background: #EFF0F0 !important;
+  border-radius: 23px !important;
+  color: black !important;
+  font-size: 12px !important;
+  font-family: 'Irish Grover' !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  justify-content: center !important;
 }
 
 /* History Table Styling */
