@@ -132,37 +132,65 @@ function App({ signOut }) {
   };
 
   const addKatschings = async (katschings, comment) => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer) {
+        console.warn('No player selected for adding Katschings.');
+        return;
+    }
 
+    console.log(`Attempting to add ${katschings} Katsching(s) to player: ${selectedPlayer.name} (ID: ${selectedPlayer.id})`);
+    
     try {
-      const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
-        item.katschings += katschings;
-        item.lastKatsching = new Date().toISOString();
-      }));
+        // Log the current state before updating
+        console.log('Current state of selectedPlayer before update:', selectedPlayer);
 
-      setPlayers(prevPlayers =>
-        sortPlayersByKatschings(prevPlayers.map(player =>
-          player.id === selectedPlayer.id ? updatedPlayer : player
-        ))
-      );
+        // Update player Katschings
+        const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
+            item.katschings += katschings;
+            item.lastKatsching = new Date().toISOString();
+        }));
 
-      const newHistoryEntry = new HistoryEntry({
-        playerId: updatedPlayer.id,
-        time: new Date().toISOString(),  // Corrected here
-        event: `${katschings} ${katschings === 1 ? 'Katsching' : 'Katschings'} für ${updatedPlayer.name}`,
-        comments: comment,
-      });
+        console.log('Updated player successfully saved:', updatedPlayer);
 
-      await DataStore.save(newHistoryEntry);
-      setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory])); // Sort history after adding
+        // Update the players state
+        setPlayers(prevPlayers => {
+            const newPlayersList = prevPlayers.map(player =>
+                player.id === selectedPlayer.id ? updatedPlayer : player
+            );
+            console.log('New players list after Katsching update:', newPlayersList);
+            return sortPlayersByKatschings(newPlayersList);
+        });
 
-      setIsKatschingPopupVisible(false);
-      setSelectedPlayer(null);
+        // Create a new history entry
+        const newHistoryEntry = new HistoryEntry({
+            playerId: updatedPlayer.id,
+            time: new Date().toISOString(),
+            event: `${katschings} ${katschings === 1 ? 'Katsching' : 'Katschings'} für ${updatedPlayer.name}`,
+            comments: comment,
+        });
+
+        console.log('New history entry created:', newHistoryEntry);
+
+        // Save history entry
+        await DataStore.save(newHistoryEntry);
+        console.log('History entry successfully saved.');
+
+        // Update the history state
+        setHistory(prevHistory => {
+            const newHistoryList = [newHistoryEntry, ...prevHistory];
+            console.log('New history list after adding entry:', newHistoryList);
+            return sortHistoryByTime(newHistoryList);
+        });
+
+        // Close the popup and clear the selected player
+        setIsKatschingPopupVisible(false);
+        setSelectedPlayer(null);
+
+        console.log('Katsching popup closed and selected player cleared.');
 
     } catch (err) {
-      console.error('Error adding katschings:', err);
+        console.error('Error occurred while adding Katschings:', err);
     }
-  };
+};
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -178,7 +206,7 @@ function App({ signOut }) {
   const copyToClipboard = () => {
     const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
     const lastHistory = history[0];
-    const lastHistoryText = `${new Date(lastHistory.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${lastHistory.event} - Kommentar: ${lastHistory.comments}`;
+    const lastHistoryText = `${new Date(lastHistory.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${lastHistory.event} - Kommentar: *${lastHistory.comments}*`;
     const clipboardText = `${playersText}\n\n${lastHistoryText}`;
     navigator.clipboard.writeText(clipboardText).then(() => {
       alert('Copied to clipboard!');

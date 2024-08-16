@@ -129,6 +129,9 @@ body {
   
 }
 
+.table-cell:first-child {
+  justify-content: flex-start !important; /* Align the first cell to the left */
+}
 /* Add Player Button Styling */
 .add-player-button-container {
   width: 100% !important;
@@ -188,8 +191,7 @@ div.katsching-counter{
 .copy-to-clipboard-button {
   padding: 10px 20px !important;
   /* add distance */
-  margin-top: 20px !important;
-  margin-left: 20px !important;
+  margin-top: 5px !important;
   background: #EFF0F0 !important;
   border-radius: 23px !important;
   color: black !important;
