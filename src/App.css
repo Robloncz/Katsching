@@ -8,14 +8,39 @@
 body {
   background-image: var(--gradient-top-bottom) !important;
 }
-.sign-out-button{
-  fontSize: 'calc(10px + 1vw)';
-  padding: '1vh 2vw';
-  margin: '1vh 1vw';
-  backgroundColor: '#eff0f0';
-  borderRadius: '5px';
-  color: '#000';
-  cursor: 'pointer';
+.sign-out-button-container {
+  position: relative;
+  padding-top: 10px;
+  padding-right: 10px;
+  align-items: end;
+  justify-content: end;
+  display: flex;
+  width: 100%;
+}
+
+.sign-out-button {
+  background-color: #f44336; /* You can customize the button color */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.App-header {
+  display: flex;           /* Enables flexbox layout */
+  align-items: center;     /* Vertically centers the items */
+  justify-content: center; /* Centers the items horizontally */
+  text-align: center;      /* Keeps text centered within its container */
+  padding: 10px;
+  font-size: calc(10px + 2vmin) !important;
+  padding-bottom: 0px !important;
+}
+
+.App-title {
+  font-family: 'Irish Grover', cursive;
+  font-size: 2.5rem;
+  margin-right: 20px;      /* Adds space between the title and the logo */
 }
 .App {
   display: flex !important;
@@ -31,17 +56,7 @@ body {
   padding-bottom: 0px !important;
 }
 
-.App-header {
-  min-height: 10vh !important;
-  display: flex !important;
-  flex-direction: row-reverse !important;
-  align-items: center !important;
-  justify-content: right !important;
-  /* add padding right */
-  padding-right: 15px !important;
-  font-size: calc(10px + 2vmin) !important;
-  width: 100% !important;
-}
+
 
 @keyframes App-logo-spin {
   from {
@@ -95,7 +110,7 @@ body {
 .table-header-text {
   text-align: center !important;
   color: #0d1a26 !important;
-  font-size: 12px !important;
+  font-size: 16px !important;
   font-family: 'Irish Grover' !important;
   font-weight: 700 !important;
   text-decoration: underline !important;
@@ -127,6 +142,10 @@ body {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   
+}
+
+.table-header-cell:first-child {
+  justify-content: flex-start !important; /* Align the first cell to the left */
 }
 
 .table-cell:first-child {

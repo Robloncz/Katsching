@@ -219,9 +219,9 @@ function App({ signOut }) {
   return (
     <View className="App">
       <div className="App-header">
-        <Button className="sign-out-button" onClick={signOut}>Sign Out</Button>
+        <h1 className="App-title">Katsching</h1>
+        <Image src={logo} className="App-logo" alt="logo" />
       </div>
-      <Image src={logo} className="App-logo" alt="logo" />
       <Card className="mainscreen-card">
         <Button className="update-button" onClick={fetchAllData}>🔄 Update</Button>
         <div className="table-container">
@@ -292,6 +292,9 @@ function App({ signOut }) {
           addKatschings={addKatschings}
         />
       )}
+      <div className="sign-out-button-container">
+        <Button className="sign-out-button" onClick={signOut}>Sign Out</Button>
+      </div>
     </View>
   );
 }  
