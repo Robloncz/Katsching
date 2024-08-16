@@ -52,9 +52,7 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [
-          "GOOGLE"
-        ],
+        "socialProviders": [],
         "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"

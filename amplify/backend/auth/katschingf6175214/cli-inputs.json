@@ -33,14 +33,8 @@
     "resourceName": "katschingf6175214",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
-    "hostedUI": true,
+    "hostedUI": false,
     "triggers": {},
-    "hostedUIDomainName": "katschingf6175214-f6175214",
-    "authProvidersUserPool": [
-      "Google"
-    ],
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
