@@ -1,13 +1,13 @@
 {
   "api": {
-    "Katsching": {
+    "katsching": {
       "dependsOn": [
         {
           "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "katsching7c491de0"
+          "resourceName": "katschingf6175214"
         }
       ],
       "output": {
@@ -19,7 +19,7 @@
             {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
-                "userPoolId": "authkatsching7c491de0"
+                "userPoolId": "authkatschingf6175214"
               }
             }
           ],
@@ -37,19 +37,9 @@
     }
   },
   "auth": {
-    "katsching7c491de0": {
+    "katschingf6175214": {
       "customAuth": false,
-      "dependsOn": [
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "katsching7c491de0PostConfirmation",
-          "triggerProvider": "Cognito"
-        }
-      ],
+      "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [

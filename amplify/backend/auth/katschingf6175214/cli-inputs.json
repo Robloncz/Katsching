@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "katsching7c491de0_identitypool_7c491de0",
+    "identityPoolName": "katschingf6175214_identitypool_f6175214",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "katsch7c491de0",
-    "userPoolName": "katsching7c491de0_userpool_7c491de0",
+    "resourceNameTruncated": "katschf6175214",
+    "userPoolName": "katschingf6175214_userpool_f6175214",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -25,25 +25,17 @@
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [
-      "email"
-    ],
-    "userpoolClientReadAttributes": [
-      "email"
-    ],
-    "userpoolClientLambdaRole": "katsch7c491de0_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "katschf6175214_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "7c491de0",
-    "resourceName": "katsching7c491de0",
+    "sharedId": "f6175214",
+    "resourceName": "katschingf6175214",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "defaultSocial",
+    "useDefault": "manual",
     "hostedUI": true,
-    "triggers": {
-      "PostConfirmation": [
-        "add-to-group"
-      ]
-    },
-    "hostedUIDomainName": "katsching7c491de0-7c491de0",
+    "triggers": {},
+    "hostedUIDomainName": "katschingf6175214-f6175214",
     "authProvidersUserPool": [
       "Google"
     ],
@@ -52,6 +44,28 @@
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "thirdPartyAuth": false,
+    "authProviders": [],
+    "parentStack": {
+      "Ref": "AWS::StackId"
+    },
+    "permissions": []
   }
 }

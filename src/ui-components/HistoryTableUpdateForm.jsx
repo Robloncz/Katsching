@@ -19,11 +19,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { HistoryTable } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { generateClient } from "aws-amplify/api";
-import { getHistoryTable } from "../graphql/queries";
-import { updateHistoryTable } from "../graphql/mutations";
-const client = generateClient();
+import { DataStore } from "aws-amplify/datastore";
 function ArrayField({
   items = [],
   onChange,
@@ -228,12 +226,7 @@ export default function HistoryTableUpdateForm(props) {
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? (
-            await client.graphql({
-              query: getHistoryTable.replaceAll("__typename", ""),
-              variables: { id: idProp },
-            })
-          )?.data?.getHistoryTable
+        ? await DataStore.query(HistoryTable, idProp)
         : historyTableModelProp;
       setHistoryTableRecord(record);
     };
@@ -275,11 +268,11 @@ export default function HistoryTableUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          wicht: wicht ?? null,
-          vollstrecker: vollstrecker ?? null,
-          numKatsching: numKatsching ?? null,
-          isCommented: isCommented ?? null,
-          comments: comments ?? null,
+          wicht,
+          vollstrecker,
+          numKatsching,
+          isCommented,
+          comments,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -309,22 +302,17 @@ export default function HistoryTableUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await client.graphql({
-            query: updateHistoryTable.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                id: historyTableRecord.id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            HistoryTable.copyOf(historyTableRecord, (updated) => {
+              Object.assign(updated, modelFields);
+            })
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}

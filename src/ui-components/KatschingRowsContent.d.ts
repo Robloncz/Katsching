@@ -5,6 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
+import { KatschingTable } from "../models";
 import { FlexProps, IconProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -30,7 +31,7 @@ export declare type KatschingRowsContentOverridesProps = {
     Icon?: PrimitiveOverrideProps<IconProps>;
 } & EscapeHatchProps;
 export declare type KatschingRowsContentProps = React.PropsWithChildren<Partial<FlexProps> & {
-    katschingTable?: any;
+    katschingTable?: KatschingTable;
 } & {
     overrides?: KatschingRowsContentOverridesProps | undefined | null;
 }>;

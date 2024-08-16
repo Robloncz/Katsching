@@ -6,23 +6,18 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { generateClient } from "aws-amplify/api";
-import { updateKatschingTable } from "../graphql/mutations";
-import { getOverrideProps } from "./utils";
+import { KatschingTable } from "../models";
+import { getOverrideProps, useDataStoreUpdateAction } from "./utils";
+import { schema } from "../models/schema";
 import { Flex, Icon, Text, View } from "@aws-amplify/ui-react";
-const client = generateClient();
 export default function KatschingRowsContent(props) {
   const { katschingTable, overrides, ...rest } = props;
-  const iconOnClick = async () => {
-    await client.graphql({
-      query: updateKatschingTable.replaceAll("__typename", ""),
-      variables: {
-        input: {
-          id: katschingTable?.Katschings,
-        },
-      },
-    });
-  };
+  const iconOnClick = useDataStoreUpdateAction({
+    fields: {},
+    id: katschingTable?.Katschings,
+    model: KatschingTable,
+    schema: schema,
+  });
   return (
     <Flex
       gap="20px"

@@ -1,39 +1,23 @@
-type KatschingTable @model @auth(rules: [{allow: public, operations: [read, update]}]) {
+type Player @model
+  @auth(rules: [
+    { allow: public }
+  ]) {
   id: ID!
-  Player: String
-  Emoji: String
-  Katschings: Int
-  LastKatschingID: ID
-  LastKatsching: KatschingDetails @hasOne(fields: ["LastKatschingID"])
+  name: String!
+  emoji: String
+  katschings: Int!
+  lastKatsching: AWSDateTime!
+  history: [HistoryEntry] @hasMany(indexName: "byPlayer", fields: ["id"])
 }
 
-type HistoryTable @model @auth(rules: [{allow: public}]) {
+type HistoryEntry @model
+  @auth(rules: [
+    { allow: public}
+  ]) {
   id: ID!
-  wicht: String
-  Katsching: [KatschingDetails] @hasMany(indexName: "byHistoryTable", fields: ["id"])
-  vollstrecker: String
-  numKatsching: String
-  isCommented: Boolean
-  comments: [String]
-  CommentDetails: [CommentDetails] @hasMany(indexName: "byHistoryTable", fields: ["id"])
+  playerId: ID! @index(name: "byPlayer", sortKeyFields: ["time"])
+  time: AWSDateTime!
+  event: String!
+  comments: String
 }
 
-type KatschingDetails @model @auth(rules: [{allow: public, operations: [create, read]}, {allow: owner}]) {
-  id: ID!
-  vollstrecker: ID
-  wicht: ID
-  numKatsching: Int
-  is_superKatsching: Boolean
-  dateTime: AWSDateTime
-  historytableID: ID! @index(name: "byHistoryTable")
-  katschingtableID: ID! @index(name: "byKatschingTable")
-}
-
-type CommentDetails @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  comment: String
-  Player: String
-  dateTime: AWSDateTime
-  katschingtableID: ID! @index(name: "byKatschingTable")
-  historytableID: ID! @index(name: "byHistoryTable")
-}

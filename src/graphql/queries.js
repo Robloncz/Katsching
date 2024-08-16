@@ -1,160 +1,173 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getKatschingTable = /* GraphQL */ `
-  query GetKatschingTable($id: ID!) {
-    getKatschingTable(id: $id) {
+export const getPlayer = /* GraphQL */ `
+  query GetPlayer($id: ID!) {
+    getPlayer(id: $id) {
       id
-      Player
-      Emoji
-      Katschings
-      LastKatschingID
-      LastKatsching {
-        id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
-        createdAt
-        updatedAt
-        owner
+      name
+      emoji
+      katschings
+      lastKatsching
+      history {
+        nextToken
+        startedAt
         __typename
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const listKatschingTables = /* GraphQL */ `
-  query ListKatschingTables(
-    $filter: ModelKatschingTableFilterInput
+export const listPlayers = /* GraphQL */ `
+  query ListPlayers(
+    $filter: ModelPlayerFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listKatschingTables(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPlayers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        Player
-        Emoji
-        Katschings
-        LastKatschingID
+        name
+        emoji
+        katschings
+        lastKatsching
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
+      startedAt
       __typename
     }
   }
 `;
-export const getHistoryTable = /* GraphQL */ `
-  query GetHistoryTable($id: ID!) {
-    getHistoryTable(id: $id) {
+export const syncPlayers = /* GraphQL */ `
+  query SyncPlayers(
+    $filter: ModelPlayerFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncPlayers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        emoji
+        katschings
+        lastKatsching
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+  }
+`;
+export const getHistoryEntry = /* GraphQL */ `
+  query GetHistoryEntry($id: ID!) {
+    getHistoryEntry(id: $id) {
       id
-      wicht
-      Katsching {
-        nextToken
-        __typename
-      }
-      vollstrecker
-      numKatsching
-      isCommented
+      playerId
+      time
+      event
       comments
-      CommentDetails {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const listHistoryTables = /* GraphQL */ `
-  query ListHistoryTables(
-    $filter: ModelHistoryTableFilterInput
+export const listHistoryEntries = /* GraphQL */ `
+  query ListHistoryEntries(
+    $filter: ModelHistoryEntryFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listHistoryTables(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listHistoryEntries(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        wicht
-        vollstrecker
-        numKatsching
-        isCommented
+        playerId
+        time
+        event
         comments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
+      startedAt
       __typename
     }
   }
 `;
-export const getKatschingDetails = /* GraphQL */ `
-  query GetKatschingDetails($id: ID!) {
-    getKatschingDetails(id: $id) {
-      id
-      vollstrecker
-      wicht
-      numKatsching
-      is_superKatsching
-      dateTime
-      historytableID
-      katschingtableID
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const listKatschingDetails = /* GraphQL */ `
-  query ListKatschingDetails(
-    $filter: ModelKatschingDetailsFilterInput
+export const syncHistoryEntries = /* GraphQL */ `
+  query SyncHistoryEntries(
+    $filter: ModelHistoryEntryFilterInput
     $limit: Int
     $nextToken: String
+    $lastSync: AWSTimestamp
   ) {
-    listKatschingDetails(
+    syncHistoryEntries(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
+      lastSync: $lastSync
     ) {
       items {
         id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
+        playerId
+        time
+        event
+        comments
         createdAt
         updatedAt
-        owner
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
+      startedAt
       __typename
     }
   }
 `;
-export const katschingDetailsByHistorytableID = /* GraphQL */ `
-  query KatschingDetailsByHistorytableID(
-    $historytableID: ID!
+export const historyEntriesByPlayerIdAndTime = /* GraphQL */ `
+  query HistoryEntriesByPlayerIdAndTime(
+    $playerId: ID!
+    $time: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
-    $filter: ModelKatschingDetailsFilterInput
+    $filter: ModelHistoryEntryFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    katschingDetailsByHistorytableID(
-      historytableID: $historytableID
+    historyEntriesByPlayerIdAndTime(
+      playerId: $playerId
+      time: $time
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -162,153 +175,19 @@ export const katschingDetailsByHistorytableID = /* GraphQL */ `
     ) {
       items {
         id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
+        playerId
+        time
+        event
+        comments
         createdAt
         updatedAt
-        owner
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
-      __typename
-    }
-  }
-`;
-export const katschingDetailsByKatschingtableID = /* GraphQL */ `
-  query KatschingDetailsByKatschingtableID(
-    $katschingtableID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelKatschingDetailsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    katschingDetailsByKatschingtableID(
-      katschingtableID: $katschingtableID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getCommentDetails = /* GraphQL */ `
-  query GetCommentDetails($id: ID!) {
-    getCommentDetails(id: $id) {
-      id
-      comment
-      Player
-      dateTime
-      katschingtableID
-      historytableID
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listCommentDetails = /* GraphQL */ `
-  query ListCommentDetails(
-    $filter: ModelCommentDetailsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCommentDetails(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        comment
-        Player
-        dateTime
-        katschingtableID
-        historytableID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const commentDetailsByKatschingtableID = /* GraphQL */ `
-  query CommentDetailsByKatschingtableID(
-    $katschingtableID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelCommentDetailsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    commentDetailsByKatschingtableID(
-      katschingtableID: $katschingtableID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        comment
-        Player
-        dateTime
-        katschingtableID
-        historytableID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const commentDetailsByHistorytableID = /* GraphQL */ `
-  query CommentDetailsByHistorytableID(
-    $historytableID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelCommentDetailsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    commentDetailsByHistorytableID(
-      historytableID: $historytableID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        comment
-        Player
-        dateTime
-        katschingtableID
-        historytableID
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
+      startedAt
       __typename
     }
   }

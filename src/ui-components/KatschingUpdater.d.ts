@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps } from "@aws-amplify/ui-react";
+import { KatschingTable } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -31,7 +32,7 @@ export declare type KatschingUpdaterProps = React.PropsWithChildren<{
     overrides?: KatschingUpdaterOverridesProps | undefined | null;
 } & {
     id?: string;
-    katschingTable?: any;
+    katschingTable?: KatschingTable;
     onSubmit?: (fields: KatschingUpdaterInputValues) => KatschingUpdaterInputValues;
     onSuccess?: (fields: KatschingUpdaterInputValues) => void;
     onError?: (fields: KatschingUpdaterInputValues, errorMessage: string) => void;

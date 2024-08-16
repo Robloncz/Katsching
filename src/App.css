@@ -1,257 +1,275 @@
 @import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
 
 :root {
-  --primary-color: #DCDEE0;
-  --secondary-color: #89949F; /* Change this to your desired color */
-  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --primary-color: #DCDEE0 !important;
+  --secondary-color: #89949F !important; /* Change this to your desired color */
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color)) !important;
 }
 body {
-  background-image: var(--gradient-top-bottom);
+  background-image: var(--gradient-top-bottom) !important;
 }
-
+.sign-out-button{
+  fontSize: 'calc(10px + 1vw)';
+  padding: '1vh 2vw';
+  margin: '1vh 1vw';
+  backgroundColor: '#eff0f0';
+  borderRadius: '5px';
+  color: '#000';
+  cursor: 'pointer';
+}
 .App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .App-logo {
-  height: 10vmin;
-  pointer-events: visibleFill;
-  animation: App-logo-spin infinite 10s linear;
+  height: 12vmin  !important;
+  pointer-events: visibleFill  !important;
+  animation: App-logo-spin infinite 10s linear  !important;
+  padding-bottom: 0px !important;
 }
 
 .App-header {
-  min-height: 10vh;
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  justify-content: right;
+  min-height: 10vh !important;
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  align-items: center !important;
+  justify-content: right !important;
   /* add padding right */
-  padding-right: 15px;
-  font-size: calc(10px + 2vmin);
-  width: 100%;
+  padding-right: 15px !important;
+  font-size: calc(10px + 2vmin) !important;
+  width: 100% !important;
 }
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg) ;
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) ;
   }
 }
 
 .mainscreen-card {
-  background-color: rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0) !important;
 }
 
 /* Table Styling */
 .table-container {
-  width: 80vw;
-  height: 50hw;
-  padding: 11px 20px;
-  background: #dcdee0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 1px;
-  border-radius: 10px; /* add round edges */
+  width: 95vw !important;
+  height: 50hw !important;
+  padding: 11px 20px !important;
+  background: #dcdee0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 1px !important;
+  border-radius: 10px !important; /* add round edges */
+  overflow-x: auto;
 }
 
 .table-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
 }
 
 .table-header-cell {
-  flex: 1;
-  display: flex;
-  justify-content: center; /* Center the contents */
-  align-items: center; /* Center the contents */
-  background: #dcdee0;
-  height: 18px;
-  padding: 0 15px;
-  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important; /* Center the contents */
+  align-items: center !important; /* Center the contents */
+  background: #dcdee0 !important;
+  height: 18px !important;
+  padding: 0 15px !important;
+  white-space: nowrap !important; /* Prevent text from breaking into multiple lines */
 }
 
 .table-header-cell:last-child {
-  width: 0px;
+  width: 0px !important;
 }
 
 .table-header-text {
-  text-align: center;
-  color: #0d1a26;
-  font-size: 12px;
-  font-family: 'Irish Grover';
-  font-weight: 700;
-  text-decoration: underline;
-  line-height: 18px;
-  word-wrap: break-word;
+  text-align: center !important;
+  color: #0d1a26 !important;
+  font-size: 12px !important;
+  font-family: 'Irish Grover' !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  line-height: 18px !important;
+  word-wrap: break-word !important;
 }
 
 /* Table Styles */
 .table-row {
-  display: flex;
-  align-items: center; /* Center the contents */
-  width: 100%;
+  display: flex !important;
+  align-items: center !important; /* Center the contents */
+  width: 100% !important;
 }
 
 .table-cell {
-  flex: 1; /* This makes the cells take up equal space */
-  display: flex;
-  justify-content: center; /* Center the contents */
-  align-items: center; /* Center the contents */
-  background: #dcdee0;
-  padding: 0 15px;
-  font-family: 'Irish Grover';
-  color: #0d1a26;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 18px;
-  word-wrap: normal;
-  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+  flex: 1 !important; /* This makes the cells take up equal space */
+  display: flex !important;
+  justify-content: center !important; /* Center the contents */
+  align-items: center !important; /* Center the contents */
+  background: #dcdee0 !important;
+  padding: 0 15px !important;
+  font-family: 'Irish Grover' !important;
+  color: #0d1a26 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  word-wrap: normal !important;
+  white-space: nowrap !important; /* Prevent text from breaking into multiple lines */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  
 }
 
 /* Add Player Button Styling */
 .add-player-button-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  margin-bottom: 10px !important;
 }
 
 .add-player-button {
-  padding: 10px 20px;
+  padding: 10px 20px !important;
   /* add distance */
-  margin-top: 20px;
-  background: #EFF0F0;
-  border-radius: 23px;
-  color: black;
-  font-size: 12px;
-  font-family: 'Irish Grover';
-  font-weight: 500;
-  cursor: pointer;
+  margin-top: 20px !important;
+  background: #EFF0F0 !important;
+  border-radius: 23px !important;
+  color: black !important;
+  font-size: 12px !important;
+  font-family: 'Irish Grover' !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+.update-button { 
+  justify-content: right !important;
+  border: none !important;
+  font-size: 30px !important;
+  padding-top: 0px !important;
 }
 
 /* Add this to your existing CSS */
 .katsching-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* Adjust the gap as needed */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important; /* Adjust the gap as needed */
 }
 
 .add-katsching-button {
-  background: #EFF0F0;
-  border-radius: 30%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  justify-content: center; /* Center the contents */
-  align-items: center; /* Center the contents */
-  cursor: pointer;
-  margin-left: 0;
+  background: #EFF0F0 !important;
+  border-radius: 30% !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  justify-content: center !important; /* Center the contents */
+  align-items: center !important; /* Center the contents */
+  cursor: pointer !important;
+  margin-left: 0 !important;
 }
 
 /* History Table Styling */
 .history-table-container {
-  width: 80vw;
-  padding: 11px 20px;
-  background: #dcdee0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 1px;
-  border-radius: 10px; /* Add round edges */
-  margin-top: 20px; /* Add some space above the history table */
-  z-index: 1;
-  overflow: hidden; /* Ensure the container does not expand */
-  max-height: 600px;
+  width: 95vw !important;
+  padding: 11px 20px !important;
+  background: #dcdee0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 1px !important;
+  border-radius: 10px !important; /* Add round edges */
+  margin-top: 20px !important; /* Add some space above the history table */
+  z-index: 1 !important;
+  overflow: hidden !important; /* Ensure the container does not expand */
+  max-height: 300px !important; /* Set a maximum height */
 }
 
 .history-table-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
 }
 
 .history-table-header-cell {
-  flex: 1;
-  display: flex;
-  justify-content: center; /* Center the contents */
-  align-items: center; /* Center the contents */
-  background: #dcdee0;
-  height: 18px;
-  padding: 0 15px;
-  white-space: nowrap; /* Prevent text from breaking into multiple lines */
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important; /* Center the contents */
+  align-items: center !important; /* Center the contents */
+  background: #dcdee0 !important;
+  height: 18px !important;
+  padding: 0 15px !important;
+  white-space: nowrap !important; /* Prevent text from breaking into multiple lines */
 }
 
 .history-table-header-cell:first-child {
-  justify-content: flex-start; /* Align the first cell to the left */
+  justify-content: flex-start !important; /* Align the first cell to the left */
+  flex: 2 !important;
 }
 
 
 .history-table-header-cell:last-child {
-  justify-content: flex-end; /* Align the last cell to the right */
+  justify-content: flex-end !important; /* Align the last cell to the right */
 }
 
 .history-table-header-text {
-  text-align: center;
-  color: #0d1a26;
-  font-size: 12px;
-  font-family: 'Irish Grover';
-  font-weight: 700;
-  text-decoration: underline;
-  line-height: 18px;
-  word-wrap: break-word;
+  text-align: center !important;
+  color: #0d1a26 !important;
+  font-size: 12px !important;
+  font-family: 'Irish Grover' !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  line-height: 18px !important;
+  word-wrap: break-word !important;
 }
 
 
 /* History Table Row Styles */
 .history-table-row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  background: #EFF0F0;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 5px;
-  height: auto;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  background: #EFF0F0 !important;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25) !important;
+  padding: 10px !important;
+  border-radius: 5px !important;
+  margin-top: 5px !important;
+  height: auto !important;
 }
 
 
 .history-table-cell {
-  flex: 1; /* Allow cells to grow and shrink */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 15px;
-  font-family: 'Irish Grover';
-  color: #0d1a26;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 18px;
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-all;
-  height: auto;
+  flex: 1 !important; /* Allow cells to grow and shrink */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 15px !important;
+  font-family: 'Irish Grover' !important;
+  color: #0d1a26 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+  height: auto !important;
 }
 
 
-.table-cell {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 .history-table-cell:last-child {
-  flex-grow: 2; /* Allow the last cell to grow more */
-  white-space: normal; /* Allow text to wrap */
+  flex-grow: 2 !important; /* Allow the last cell to grow more */
+  white-space: normal !important; /* Allow text to wrap */
+  height: auto !important;
+  overflow-wrap: break-word !important;
 }
 

@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { HistoryTable } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -48,7 +49,7 @@ export declare type HistoryTableUpdateFormProps = React.PropsWithChildren<{
     overrides?: HistoryTableUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    historyTable?: any;
+    historyTable?: HistoryTable;
     onSubmit?: (fields: HistoryTableUpdateFormInputValues) => HistoryTableUpdateFormInputValues;
     onSuccess?: (fields: HistoryTableUpdateFormInputValues) => void;
     onError?: (fields: HistoryTableUpdateFormInputValues, errorMessage: string) => void;

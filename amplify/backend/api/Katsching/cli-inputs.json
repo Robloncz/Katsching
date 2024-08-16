@@ -1,12 +1,17 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "apiName": "Katsching",
+    "apiName": "katsching",
     "serviceName": "AppSync",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",
       "expirationTime": 30
+    },
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "AUTOMERGE"
+      }
     },
     "additionalAuthTypes": [
       {
@@ -14,13 +19,8 @@
       },
       {
         "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authkatsching7c491de0"
+        "cognitoUserPoolId": "authkatschingf6175214"
       }
-    ],
-    "conflictResolution": {
-      "defaultResolutionStrategy": {
-        "type": "NONE"
-      }
-    }
+    ]
   }
 }

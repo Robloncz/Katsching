@@ -1,281 +1,125 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateKatschingTable = /* GraphQL */ `
-  subscription OnCreateKatschingTable(
-    $filter: ModelSubscriptionKatschingTableFilterInput
-  ) {
-    onCreateKatschingTable(filter: $filter) {
+export const onCreatePlayer = /* GraphQL */ `
+  subscription OnCreatePlayer($filter: ModelSubscriptionPlayerFilterInput) {
+    onCreatePlayer(filter: $filter) {
       id
-      Player
-      Emoji
-      Katschings
-      LastKatschingID
-      LastKatsching {
-        id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateKatschingTable = /* GraphQL */ `
-  subscription OnUpdateKatschingTable(
-    $filter: ModelSubscriptionKatschingTableFilterInput
-  ) {
-    onUpdateKatschingTable(filter: $filter) {
-      id
-      Player
-      Emoji
-      Katschings
-      LastKatschingID
-      LastKatsching {
-        id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteKatschingTable = /* GraphQL */ `
-  subscription OnDeleteKatschingTable(
-    $filter: ModelSubscriptionKatschingTableFilterInput
-  ) {
-    onDeleteKatschingTable(filter: $filter) {
-      id
-      Player
-      Emoji
-      Katschings
-      LastKatschingID
-      LastKatsching {
-        id
-        vollstrecker
-        wicht
-        numKatsching
-        is_superKatsching
-        dateTime
-        historytableID
-        katschingtableID
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateHistoryTable = /* GraphQL */ `
-  subscription OnCreateHistoryTable(
-    $filter: ModelSubscriptionHistoryTableFilterInput
-  ) {
-    onCreateHistoryTable(filter: $filter) {
-      id
-      wicht
-      Katsching {
+      name
+      emoji
+      katschings
+      lastKatsching
+      history {
         nextToken
+        startedAt
         __typename
       }
-      vollstrecker
-      numKatsching
-      isCommented
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePlayer = /* GraphQL */ `
+  subscription OnUpdatePlayer($filter: ModelSubscriptionPlayerFilterInput) {
+    onUpdatePlayer(filter: $filter) {
+      id
+      name
+      emoji
+      katschings
+      lastKatsching
+      history {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePlayer = /* GraphQL */ `
+  subscription OnDeletePlayer($filter: ModelSubscriptionPlayerFilterInput) {
+    onDeletePlayer(filter: $filter) {
+      id
+      name
+      emoji
+      katschings
+      lastKatsching
+      history {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onCreateHistoryEntry = /* GraphQL */ `
+  subscription OnCreateHistoryEntry(
+    $filter: ModelSubscriptionHistoryEntryFilterInput
+  ) {
+    onCreateHistoryEntry(filter: $filter) {
+      id
+      playerId
+      time
+      event
       comments
-      CommentDetails {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const onUpdateHistoryTable = /* GraphQL */ `
-  subscription OnUpdateHistoryTable(
-    $filter: ModelSubscriptionHistoryTableFilterInput
+export const onUpdateHistoryEntry = /* GraphQL */ `
+  subscription OnUpdateHistoryEntry(
+    $filter: ModelSubscriptionHistoryEntryFilterInput
   ) {
-    onUpdateHistoryTable(filter: $filter) {
+    onUpdateHistoryEntry(filter: $filter) {
       id
-      wicht
-      Katsching {
-        nextToken
-        __typename
-      }
-      vollstrecker
-      numKatsching
-      isCommented
+      playerId
+      time
+      event
       comments
-      CommentDetails {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const onDeleteHistoryTable = /* GraphQL */ `
-  subscription OnDeleteHistoryTable(
-    $filter: ModelSubscriptionHistoryTableFilterInput
+export const onDeleteHistoryEntry = /* GraphQL */ `
+  subscription OnDeleteHistoryEntry(
+    $filter: ModelSubscriptionHistoryEntryFilterInput
   ) {
-    onDeleteHistoryTable(filter: $filter) {
+    onDeleteHistoryEntry(filter: $filter) {
       id
-      wicht
-      Katsching {
-        nextToken
-        __typename
-      }
-      vollstrecker
-      numKatsching
-      isCommented
+      playerId
+      time
+      event
       comments
-      CommentDetails {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateKatschingDetails = /* GraphQL */ `
-  subscription OnCreateKatschingDetails(
-    $filter: ModelSubscriptionKatschingDetailsFilterInput
-    $owner: String
-  ) {
-    onCreateKatschingDetails(filter: $filter, owner: $owner) {
-      id
-      vollstrecker
-      wicht
-      numKatsching
-      is_superKatsching
-      dateTime
-      historytableID
-      katschingtableID
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onUpdateKatschingDetails = /* GraphQL */ `
-  subscription OnUpdateKatschingDetails(
-    $filter: ModelSubscriptionKatschingDetailsFilterInput
-    $owner: String
-  ) {
-    onUpdateKatschingDetails(filter: $filter, owner: $owner) {
-      id
-      vollstrecker
-      wicht
-      numKatsching
-      is_superKatsching
-      dateTime
-      historytableID
-      katschingtableID
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onDeleteKatschingDetails = /* GraphQL */ `
-  subscription OnDeleteKatschingDetails(
-    $filter: ModelSubscriptionKatschingDetailsFilterInput
-    $owner: String
-  ) {
-    onDeleteKatschingDetails(filter: $filter, owner: $owner) {
-      id
-      vollstrecker
-      wicht
-      numKatsching
-      is_superKatsching
-      dateTime
-      historytableID
-      katschingtableID
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const onCreateCommentDetails = /* GraphQL */ `
-  subscription OnCreateCommentDetails(
-    $filter: ModelSubscriptionCommentDetailsFilterInput
-  ) {
-    onCreateCommentDetails(filter: $filter) {
-      id
-      comment
-      Player
-      dateTime
-      katschingtableID
-      historytableID
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateCommentDetails = /* GraphQL */ `
-  subscription OnUpdateCommentDetails(
-    $filter: ModelSubscriptionCommentDetailsFilterInput
-  ) {
-    onUpdateCommentDetails(filter: $filter) {
-      id
-      comment
-      Player
-      dateTime
-      katschingtableID
-      historytableID
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteCommentDetails = /* GraphQL */ `
-  subscription OnDeleteCommentDetails(
-    $filter: ModelSubscriptionCommentDetailsFilterInput
-  ) {
-    onDeleteCommentDetails(filter: $filter) {
-      id
-      comment
-      Player
-      dateTime
-      katschingtableID
-      historytableID
-      createdAt
-      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }

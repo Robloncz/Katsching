@@ -3,14 +3,14 @@ import './Popup.css';
 
 const KatschingPopup = ({ isVisible, togglePopup, addKatschings }) => {
     const [katschings, setKatschings] = useState(0);
-    const [comment, setComment] = useState(''); // State to manage the comment
+    const [comment, setComment] = useState('');
 
-    const popupRef = useRef(null); // Ref for the popup container
+    const popupRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popupRef.current && !popupRef.current.contains(event.target)) {
-                togglePopup(); // Close the popup if clicked outside
+                togglePopup();
             }
         };
 
@@ -23,10 +23,12 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings }) => {
     if (!isVisible) return null;
 
     const handleAddKatschings = () => {
-        addKatschings(katschings, comment); // Pass the comment to the addKatschings function
-        setKatschings(0);
-        setComment(''); // Reset the comment input
-        togglePopup();
+        if (katschings > 0) {
+            addKatschings(katschings, comment);
+            setKatschings(0);
+            setComment('');
+            togglePopup();
+        }
     };
 
     return (
@@ -48,7 +50,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings }) => {
                         type="text" 
                         placeholder="Kommentar" 
                         value={comment} 
-                        onChange={(e) => setComment(e.target.value)} // Handle comment input
+                        onChange={(e) => setComment(e.target.value)} 
                     />
                     <div className="popup-add-button" onClick={handleAddKatschings}>Katsching/s hinzufügen</div>
                 </div>

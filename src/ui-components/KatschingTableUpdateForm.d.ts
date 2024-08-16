@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { KatschingTable } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -42,7 +43,7 @@ export declare type KatschingTableUpdateFormProps = React.PropsWithChildren<{
     overrides?: KatschingTableUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    katschingTable?: any;
+    katschingTable?: KatschingTable;
     onSubmit?: (fields: KatschingTableUpdateFormInputValues) => KatschingTableUpdateFormInputValues;
     onSuccess?: (fields: KatschingTableUpdateFormInputValues) => void;
     onError?: (fields: KatschingTableUpdateFormInputValues, errorMessage: string) => void;

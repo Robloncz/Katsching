@@ -7,13 +7,13 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { KatschingTable } from "../models";
+import { Player } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { DataStore } from "aws-amplify/datastore";
-export default function KatschingTableUpdateForm(props) {
+export default function PlayerUpdateForm(props) {
   const {
     id: idProp,
-    katschingTable: katschingTableModelProp,
+    player: playerModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -23,40 +23,44 @@ export default function KatschingTableUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    Player: "",
-    Emoji: "",
-    Katschings: "",
+    name: "",
+    emoji: "",
+    katschings: "",
+    lastKatsching: "",
   };
-  const [Player, setPlayer] = React.useState(initialValues.Player);
-  const [Emoji, setEmoji] = React.useState(initialValues.Emoji);
-  const [Katschings, setKatschings] = React.useState(initialValues.Katschings);
+  const [name, setName] = React.useState(initialValues.name);
+  const [emoji, setEmoji] = React.useState(initialValues.emoji);
+  const [katschings, setKatschings] = React.useState(initialValues.katschings);
+  const [lastKatsching, setLastKatsching] = React.useState(
+    initialValues.lastKatsching
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = katschingTableRecord
-      ? { ...initialValues, ...katschingTableRecord }
+    const cleanValues = playerRecord
+      ? { ...initialValues, ...playerRecord }
       : initialValues;
-    setPlayer(cleanValues.Player);
-    setEmoji(cleanValues.Emoji);
-    setKatschings(cleanValues.Katschings);
+    setName(cleanValues.name);
+    setEmoji(cleanValues.emoji);
+    setKatschings(cleanValues.katschings);
+    setLastKatsching(cleanValues.lastKatsching);
     setErrors({});
   };
-  const [katschingTableRecord, setKatschingTableRecord] = React.useState(
-    katschingTableModelProp
-  );
+  const [playerRecord, setPlayerRecord] = React.useState(playerModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? await DataStore.query(KatschingTable, idProp)
-        : katschingTableModelProp;
-      setKatschingTableRecord(record);
+        ? await DataStore.query(Player, idProp)
+        : playerModelProp;
+      setPlayerRecord(record);
     };
     queryData();
-  }, [idProp, katschingTableModelProp]);
-  React.useEffect(resetStateValues, [katschingTableRecord]);
+  }, [idProp, playerModelProp]);
+  React.useEffect(resetStateValues, [playerRecord]);
   const validations = {
-    Player: [],
-    Emoji: [],
-    Katschings: [],
+    name: [{ type: "Required" }],
+    emoji: [],
+    katschings: [{ type: "Required" }],
+    lastKatsching: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -75,6 +79,23 @@ export default function KatschingTableUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
   return (
     <Grid
       as="form"
@@ -84,9 +105,10 @@ export default function KatschingTableUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          Player,
-          Emoji,
-          Katschings,
+          name,
+          emoji,
+          katschings,
+          lastKatsching,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -117,7 +139,7 @@ export default function KatschingTableUpdateForm(props) {
             }
           });
           await DataStore.save(
-            KatschingTable.copyOf(katschingTableRecord, (updated) => {
+            Player.copyOf(playerRecord, (updated) => {
               Object.assign(updated, modelFields);
             })
           );
@@ -130,90 +152,122 @@ export default function KatschingTableUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "KatschingTableUpdateForm")}
+      {...getOverrideProps(overrides, "PlayerUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Player"
-        isRequired={false}
+        label="Name"
+        isRequired={true}
         isReadOnly={false}
-        value={Player}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Player: value,
-              Emoji,
-              Katschings,
+              name: value,
+              emoji,
+              katschings,
+              lastKatsching,
             };
             const result = onChange(modelFields);
-            value = result?.Player ?? value;
+            value = result?.name ?? value;
           }
-          if (errors.Player?.hasError) {
-            runValidationTasks("Player", value);
+          if (errors.name?.hasError) {
+            runValidationTasks("name", value);
           }
-          setPlayer(value);
+          setName(value);
         }}
-        onBlur={() => runValidationTasks("Player", Player)}
-        errorMessage={errors.Player?.errorMessage}
-        hasError={errors.Player?.hasError}
-        {...getOverrideProps(overrides, "Player")}
+        onBlur={() => runValidationTasks("name", name)}
+        errorMessage={errors.name?.errorMessage}
+        hasError={errors.name?.hasError}
+        {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
         label="Emoji"
         isRequired={false}
         isReadOnly={false}
-        value={Emoji}
+        value={emoji}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Player,
-              Emoji: value,
-              Katschings,
+              name,
+              emoji: value,
+              katschings,
+              lastKatsching,
             };
             const result = onChange(modelFields);
-            value = result?.Emoji ?? value;
+            value = result?.emoji ?? value;
           }
-          if (errors.Emoji?.hasError) {
-            runValidationTasks("Emoji", value);
+          if (errors.emoji?.hasError) {
+            runValidationTasks("emoji", value);
           }
           setEmoji(value);
         }}
-        onBlur={() => runValidationTasks("Emoji", Emoji)}
-        errorMessage={errors.Emoji?.errorMessage}
-        hasError={errors.Emoji?.hasError}
-        {...getOverrideProps(overrides, "Emoji")}
+        onBlur={() => runValidationTasks("emoji", emoji)}
+        errorMessage={errors.emoji?.errorMessage}
+        hasError={errors.emoji?.hasError}
+        {...getOverrideProps(overrides, "emoji")}
       ></TextField>
       <TextField
         label="Katschings"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         type="number"
         step="any"
-        value={Katschings}
+        value={katschings}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
             ? e.target.value
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
-              Player,
-              Emoji,
-              Katschings: value,
+              name,
+              emoji,
+              katschings: value,
+              lastKatsching,
             };
             const result = onChange(modelFields);
-            value = result?.Katschings ?? value;
+            value = result?.katschings ?? value;
           }
-          if (errors.Katschings?.hasError) {
-            runValidationTasks("Katschings", value);
+          if (errors.katschings?.hasError) {
+            runValidationTasks("katschings", value);
           }
           setKatschings(value);
         }}
-        onBlur={() => runValidationTasks("Katschings", Katschings)}
-        errorMessage={errors.Katschings?.errorMessage}
-        hasError={errors.Katschings?.hasError}
-        {...getOverrideProps(overrides, "Katschings")}
+        onBlur={() => runValidationTasks("katschings", katschings)}
+        errorMessage={errors.katschings?.errorMessage}
+        hasError={errors.katschings?.hasError}
+        {...getOverrideProps(overrides, "katschings")}
+      ></TextField>
+      <TextField
+        label="Last katsching"
+        isRequired={true}
+        isReadOnly={false}
+        type="datetime-local"
+        value={lastKatsching && convertToLocal(new Date(lastKatsching))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              name,
+              emoji,
+              katschings,
+              lastKatsching: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.lastKatsching ?? value;
+          }
+          if (errors.lastKatsching?.hasError) {
+            runValidationTasks("lastKatsching", value);
+          }
+          setLastKatsching(value);
+        }}
+        onBlur={() => runValidationTasks("lastKatsching", lastKatsching)}
+        errorMessage={errors.lastKatsching?.errorMessage}
+        hasError={errors.lastKatsching?.hasError}
+        {...getOverrideProps(overrides, "lastKatsching")}
       ></TextField>
       <Flex
         justifyContent="space-between"
@@ -226,7 +280,7 @@ export default function KatschingTableUpdateForm(props) {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || katschingTableModelProp)}
+          isDisabled={!(idProp || playerModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -238,7 +292,7 @@ export default function KatschingTableUpdateForm(props) {
             type="submit"
             variation="primary"
             isDisabled={
-              !(idProp || katschingTableModelProp) ||
+              !(idProp || playerModelProp) ||
               Object.values(errors).some((e) => e?.hasError)
             }
             {...getOverrideProps(overrides, "SubmitButton")}

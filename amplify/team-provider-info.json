@@ -26,18 +26,18 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-katsching-maxrizz-6cc4b-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "katsching7c491de0": {}
-      },
       "function": {
         "katsching7c491de0PostConfirmation": {
           "GROUP": "Katschingas",
           "deploymentBucketName": "amplify-katsching-maxrizz-6cc4b-deployment",
-          "s3Key": "amplify-builds/katsching7c491de0PostConfirmation-55737530792b3879776d-build.zip"
+          "s3Key": "amplify-builds/katsching7c491de0PostConfirmation-4c5869414e455641395a-build.zip"
         }
       },
       "api": {
-        "Katsching": {}
+        "katsching": {}
+      },
+      "auth": {
+        "katschingf6175214": {}
       }
     }
   }
