@@ -13,7 +13,7 @@ import Popup from './ui/Popup';
 import KatschingPopup from './ui/KatschingPopup';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { DataStore } from 'aws-amplify/datastore';
-import { Player, HistoryEntry } from './models'; // Adjust according to your DataStore models
+import { Player, HistoryEntry } from './models'; 
 import { getCurrentUser } from 'aws-amplify/auth';
 
 
@@ -24,7 +24,7 @@ function App({ signOut }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [history, setHistory] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   async function currentAuthenticatedUser() {
     try {
@@ -40,42 +40,32 @@ function App({ signOut }) {
   }
 
   const fetchAllData = useCallback(async () => {
-    let retryCount = 0;
-    const maxRetries = 5;
+    if (!DataStore.isStarted) return; // Prevent unnecessary retries
 
-    while (retryCount < maxRetries) {
-      try {
-        if (DataStore.isStarted) {
-          const playersData = await DataStore.query(Player);
-          setPlayers(sortPlayersByKatschings(playersData));
-      
-          const historyData = await DataStore.query(HistoryEntry);
-          setHistory(sortHistoryByTime(historyData));
-          return; // Exit the loop on success
-        }
-      } catch (err) {
-        console.error('Error fetching data, retrying:', err);
-        retryCount++;
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retrying
-      }
+    try {
+      const playersData = await DataStore.query(Player);
+      setPlayers(sortPlayersByKatschings(playersData));
+  
+      const historyData = await DataStore.query(HistoryEntry);
+      setHistory(sortHistoryByTime(historyData));
+      setLoading(false);  // Ensure loading state is updated after data fetch
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setLoading(false); // Ensure loading state is updated in case of an error
     }
-
-    console.error('Failed to fetch data after multiple retries');
   }, []);
 
   useEffect(() => {
     const syncData = async () => {
       try {
-        // Ensure DataStore is stopped and cleared
-        await DataStore.stop(); // Ensure DataStore is stopped before clearing
-        await DataStore.clear(); // Clear DataStore state
-        await DataStore.start(); // Start DataStore
-        
+        // Avoid clearing and starting DataStore unnecessarily
+        if (!DataStore.isStarted) {
+          await DataStore.start(); // Only start if not started
+        }
         await fetchAllData();  
-        setLoading(false);  // Set loading to false once data is fetched
       } catch (err) {
         console.error('Error syncing DataStore:', err);
-        setLoading(false); // Handle loading state in case of an error
+        setLoading(false);
       }
     };
   
@@ -93,8 +83,6 @@ function App({ signOut }) {
     syncData();
     checkAdmin();
   }, [fetchAllData]);
-  
-
 
   const sortPlayersByKatschings = (players) => {
     return [...players].sort((a, b) => b.katschings - a.katschings);
@@ -137,7 +125,7 @@ function App({ signOut }) {
       });
 
       await DataStore.save(newHistoryEntry);
-      setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory])); // Sort history after adding
+      setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
     } catch (err) {
       console.error('Error adding player:', err);
@@ -150,30 +138,19 @@ function App({ signOut }) {
         return;
     }
 
-    console.log(`Attempting to add ${katschings} Katsching(s) to player: ${selectedPlayer.name} (ID: ${selectedPlayer.id})`);
-    
     try {
-        // Log the current state before updating
-        console.log('Current state of selectedPlayer before update:', selectedPlayer);
-
-        // Update player Katschings
         const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
             item.katschings += katschings;
             item.lastKatsching = new Date().toISOString();
         }));
 
-        console.log('Updated player successfully saved:', updatedPlayer);
-
-        // Update the players state
         setPlayers(prevPlayers => {
             const newPlayersList = prevPlayers.map(player =>
                 player.id === selectedPlayer.id ? updatedPlayer : player
             );
-            console.log('New players list after Katsching update:', newPlayersList);
             return sortPlayersByKatschings(newPlayersList);
         });
 
-        // Create a new history entry
         const newHistoryEntry = new HistoryEntry({
             playerId: updatedPlayer.id,
             time: new Date().toISOString(),
@@ -181,24 +158,12 @@ function App({ signOut }) {
             comments: comment,
         });
 
-        console.log('New history entry created:', newHistoryEntry);
-
-        // Save history entry
         await DataStore.save(newHistoryEntry);
-        console.log('History entry successfully saved.');
 
-        // Update the history state
-        setHistory(prevHistory => {
-            const newHistoryList = [newHistoryEntry, ...prevHistory];
-            console.log('New history list after adding entry:', newHistoryList);
-            return sortHistoryByTime(newHistoryList);
-        });
+        setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
-        // Close the popup and clear the selected player
         setIsKatschingPopupVisible(false);
         setSelectedPlayer(null);
-
-        console.log('Katsching popup closed and selected player cleared.');
 
     } catch (err) {
         console.error('Error occurred while adding Katschings:', err);
