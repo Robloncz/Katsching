@@ -16,7 +16,6 @@ import { DataStore } from 'aws-amplify/datastore';
 import { Player, HistoryEntry } from './models'; 
 import { getCurrentUser } from 'aws-amplify/auth';
 
-
 function App({ signOut }) {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isKatschingPopupVisible, setIsKatschingPopupVisible] = useState(false);
@@ -27,56 +26,70 @@ function App({ signOut }) {
   const [loading, setLoading] = useState(true);
 
   async function currentAuthenticatedUser() {
+    console.log("Fetching current authenticated user...");
     try {
       const { username, userId, signInDetails } = await getCurrentUser();
-      console.log(`The username: ${username}`);
-      console.log(`The userId: ${userId}`);
-      console.log(`The signInDetails: ${signInDetails}`);
+      console.log(`User authenticated: username=${username}, userId=${userId}, signInDetails=${signInDetails}`);
       return { username, userId, signInDetails };
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching current authenticated user:", err);
       return null;
     }
   }
 
   const fetchAllData = useCallback(async () => {
-    if (!DataStore.isStarted) return; // Prevent unnecessary retries
-
     try {
+      // Fetch players and history after DataStore has started
       const playersData = await DataStore.query(Player);
       setPlayers(sortPlayersByKatschings(playersData));
   
       const historyData = await DataStore.query(HistoryEntry);
       setHistory(sortHistoryByTime(historyData));
-      setLoading(false);  // Ensure loading state is updated after data fetch
     } catch (err) {
       console.error('Error fetching data:', err);
-      setLoading(false); // Ensure loading state is updated in case of an error
     }
   }, []);
 
   useEffect(() => {
     const syncData = async () => {
       try {
-        // Avoid clearing and starting DataStore unnecessarily
         if (!DataStore.isStarted) {
-          await DataStore.start(); // Only start if not started
+          console.log("Starting DataStore...");
+          await DataStore.start();
         }
+
+        // Polling to wait for DataStore to start (max 10 seconds)
+        let retries = 10;
+        while (!DataStore.isStarted && retries > 0) {
+          console.log(`Waiting for DataStore to start. Retries left: ${retries}`);
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+          retries--;
+        }
+
+        if (!DataStore.isStarted) {
+          console.error("DataStore failed to start after multiple retries.");
+          return;
+        }
+
         await fetchAllData();  
       } catch (err) {
-        console.error('Error syncing DataStore:', err);
+        console.error("Error during DataStore synchronization:", err);
         setLoading(false);
       }
     };
   
     const checkAdmin = async () => {
+      console.log("Checking if user is admin...");
       try {
         const user = await currentAuthenticatedUser();
         if (user && user.username === 'rene271') { 
+          console.log("User is admin.");
           setIsAdmin(true);
+        } else {
+          console.log("User is not admin.");
         }
       } catch (err) {
-        console.error('Error checking admin status:', err);
+        console.error("Error checking admin status:", err);
       }
     };
   
@@ -85,23 +98,32 @@ function App({ signOut }) {
   }, [fetchAllData]);
 
   const sortPlayersByKatschings = (players) => {
-    return [...players].sort((a, b) => b.katschings - a.katschings);
+    console.log("Sorting players by Katschings...");
+    const sortedPlayers = [...players].sort((a, b) => b.katschings - a.katschings);
+    console.table(sortedPlayers);
+    return sortedPlayers;
   };
 
   const sortHistoryByTime = (history) => {
-    return [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
+    console.log("Sorting history entries by time...");
+    const sortedHistory = [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
+    console.table(sortedHistory);
+    return sortedHistory;
   };
 
   const togglePopup = () => {
+    console.log("Toggling popup visibility...");
     setIsPopupVisible(prev => !prev);
   };
 
   const toggleKatschingPopup = (player) => {
+    console.log("Toggling Katsching popup visibility for player:", player);
     setSelectedPlayer(player);
     setIsKatschingPopupVisible(prev => !prev);
   };
 
   const addPlayer = async (name, emoji, katschings, comment) => {
+    console.log(`Adding new player: name=${name}, emoji=${emoji}, katschings=${katschings}, comment=${comment}`);
     const fullName = `${name} ${emoji}`;
     const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
 
@@ -113,6 +135,7 @@ function App({ signOut }) {
     });
 
     try {
+      console.log("Saving new player to DataStore...");
       await DataStore.save(newPlayer);
       const updatedPlayers = sortPlayersByKatschings([...players, newPlayer]);
       setPlayers(updatedPlayers);
@@ -124,72 +147,83 @@ function App({ signOut }) {
         comments: comment,
       });
 
+      console.log("Saving new history entry to DataStore...");
       await DataStore.save(newHistoryEntry);
       setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
+      console.log("Player added successfully.");
     } catch (err) {
-      console.error('Error adding player:', err);
+      console.error("Error adding player:", err);
     }
   };
 
   const addKatschings = async (katschings, comment) => {
     if (!selectedPlayer) {
-        console.warn('No player selected for adding Katschings.');
-        return;
+      console.warn("No player selected for adding Katschings.");
+      return;
     }
 
+    console.log(`Adding ${katschings} Katschings to player: ${selectedPlayer.name}, comment=${comment}`);
     try {
-        const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
-            item.katschings += katschings;
-            item.lastKatsching = new Date().toISOString();
-        }));
+      const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
+        item.katschings += katschings;
+        item.lastKatsching = new Date().toISOString();
+      }));
+      console.log("Player updated:", updatedPlayer);
 
-        setPlayers(prevPlayers => {
-            const newPlayersList = prevPlayers.map(player =>
-                player.id === selectedPlayer.id ? updatedPlayer : player
-            );
-            return sortPlayersByKatschings(newPlayersList);
-        });
+      setPlayers(prevPlayers => {
+        const newPlayersList = prevPlayers.map(player =>
+          player.id === selectedPlayer.id ? updatedPlayer : player
+        );
+        return sortPlayersByKatschings(newPlayersList);
+      });
 
-        const newHistoryEntry = new HistoryEntry({
-            playerId: updatedPlayer.id,
-            time: new Date().toISOString(),
-            event: `${katschings} ${katschings === 1 ? 'Katsching' : 'Katschings'} für ${updatedPlayer.name}`,
-            comments: comment,
-        });
+      const newHistoryEntry = new HistoryEntry({
+        playerId: updatedPlayer.id,
+        time: new Date().toISOString(),
+        event: `${katschings} ${katschings === 1 ? 'Katsching' : 'Katschings'} für ${updatedPlayer.name}`,
+        comments: comment,
+      });
 
-        await DataStore.save(newHistoryEntry);
+      console.log("Saving new history entry for Katschings...");
+      await DataStore.save(newHistoryEntry);
+      setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
-        setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
-
-        setIsKatschingPopupVisible(false);
-        setSelectedPlayer(null);
+      console.log("Katschings added successfully.");
+      setIsKatschingPopupVisible(false);
+      setSelectedPlayer(null);
 
     } catch (err) {
-        console.error('Error occurred while adding Katschings:', err);
+      console.error("Error occurred while adding Katschings:", err);
     }
-};
+  };
 
   const formatDate = (dateString) => {
+    console.log("Formatting date:", dateString);
     const date = new Date(dateString);
-    return date.toLocaleString('en-GB', {
+    const formattedDate = date.toLocaleString('en-GB', {
       hour: '2-digit',
       minute: '2-digit',
       day: '2-digit',
       month: '2-digit',
       year: '2-digit',
     });
+    console.log("Formatted date:", formattedDate);
+    return formattedDate;
   };
 
   const copyToClipboard = () => {
+    console.log("Copying data to clipboard...");
     const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
     const lastHistory = history[0];
     const lastHistoryText = `${new Date(lastHistory.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${lastHistory.event} - Kommentar: *${lastHistory.comments}*`;
     const clipboardText = `${playersText}\n\n${lastHistoryText}`;
+    
     navigator.clipboard.writeText(clipboardText).then(() => {
+      console.log("Data copied to clipboard successfully.");
       alert('Copied to clipboard!');
     }).catch(err => {
-      console.error('Failed to copy: ', err);
+      console.error("Failed to copy data to clipboard:", err);
     });
   };
 
@@ -203,40 +237,44 @@ function App({ signOut }) {
       <Card className="mainscreen-card">
         <Button className="update-button" onClick={fetchAllData}>🔄 Update</Button>
         <div className="table-container">
-          <div className="table-header">
-            <div className="table-header-cell">
-              <div className="table-header-text">Spieler</div>
-            </div>
-            <div className="table-header-cell">
-              <div className="table-header-text">Letzter Katsching</div>
-            </div>
-            <div className="table-header-cell">
-              <div className="table-header-text">Katschings</div>
-            </div>
-          </div>
-          {players.map((player, index) => (
-            <div key={index} className="table-row">
-              <div className="table-cell">{player.name}</div>
-              <div className="table-cell">
-                {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
-              </div>
-              <div className="table-cell">
-                <div className="katsching-container">
-                  <div className="katsching-counter">{player.katschings}</div>
-                  <Button className="add-katsching-button" onClick={() => toggleKatschingPopup(player)}>+</Button>
-                </div>
-              </div>
-            </div>
-          ))}
+          {/* Katsching Table */}
+          <TableContainer component={Paper}>
+            <Table stickyHeader style={{ tableLayout: "fixed" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ width: "40%", fontFamily: 'Irish Grover' }}>Spieler</TableCell>
+                  <TableCell style={{ width: "30%", fontFamily: 'Irish Grover' }}>Letzter Katsching</TableCell>
+                  <TableCell style={{ width: "30%", fontFamily: 'Irish Grover' }}>Katschings</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {players.map((player, index) => (
+                  <TableRow key={index}>
+                    <TableCell style={{ fontFamily: 'Irish Grover' }}>{player.name}</TableCell>
+                    <TableCell style={{ fontFamily: 'Irish Grover' }}>
+                      {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: 'Irish Grover' }}>
+                      <div className="katsching-container">
+                        <div className="katsching-counter">{player.katschings}</div>
+                        <Button className="add-katsching-button" onClick={() => toggleKatschingPopup(player)}>+</Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
   
           <div className="add-player-button-container">
-            {isAdmin && ( // Only show this button if the user is an admin
+            {isAdmin && (
               <Button className="add-player-button" onClick={togglePopup}>Neuen Wicht hinzufügen</Button>
             )}
             <Button className="copy-to-clipboard-button" onClick={copyToClipboard}>In Zwischenablage</Button>
           </div>
         </div>
       </Card>
+  
   
       {/* History Table */}
       <Card className="history-table-container">
