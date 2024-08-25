@@ -25,14 +25,11 @@ function App({ signOut }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isOperationInProgress, setIsOperationInProgress] = useState(false); // Lock UI during operations
-  const DEBUG = false; // Toggle this flag to enable or disable logging
   const [showCopyNotification, setShowCopyNotification] = useState(false); // State for copy notification
 
   async function currentAuthenticatedUser() {
-    if (DEBUG) console.log("Fetching current authenticated user...");
     try {
       const { username, userId, signInDetails } = await getCurrentUser();
-      if (DEBUG) console.log(`User authenticated: username=${username}, userId=${userId}, signInDetails=${signInDetails}`);
       return { username, userId, signInDetails };
     } catch (err) {
       console.error("Error fetching current authenticated user:", err);
@@ -42,7 +39,6 @@ function App({ signOut }) {
 
   const fetchAllData = useCallback(async () => {
     try {
-      if (DEBUG) console.log("Fetching all data...");
       const playersData = await DataStore.query(Player);
       setPlayers(sortPlayersByKatschings(playersData));
 
@@ -57,13 +53,11 @@ function App({ signOut }) {
     const syncData = async () => {
       try {
         if (!DataStore.isStarted) {
-          if (DEBUG) console.log("Starting DataStore...");
           await DataStore.start();
         }
 
         let retries = 10;
         while (!DataStore.isStarted && retries > 0) {
-          if (DEBUG) console.log(`Waiting for DataStore to start. Retries left: ${retries}`);
           await new Promise(resolve => setTimeout(resolve, 1000));
           retries--;
         }
@@ -81,14 +75,10 @@ function App({ signOut }) {
     };
   
     const checkAdmin = async () => {
-      if (DEBUG) console.log("Checking if user is admin...");
       try {
         const user = await currentAuthenticatedUser();
         if (user && user.username === 'rene271') { 
-          if (DEBUG) console.log("User is admin.");
           setIsAdmin(true);
-        } else {
-          if (DEBUG) console.log("User is not admin.");
         }
       } catch (err) {
         console.error("Error checking admin status:", err);
@@ -100,13 +90,11 @@ function App({ signOut }) {
   }, [fetchAllData]);
 
   const sortPlayersByKatschings = (players) => {
-    if (DEBUG) console.log("Sorting players by Katschings...");
     const sortedPlayers = [...players].sort((a, b) => b.katschings - a.katschings);
     return sortedPlayers;
   };
 
   const sortHistoryByTime = (history) => {
-    if (DEBUG) console.log("Sorting history entries by time...");
     const sortedHistory = [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
     return sortedHistory;
   };
@@ -125,7 +113,6 @@ function App({ signOut }) {
   };
   
   const addPlayer = async (name, emoji, katschings, comment) => {
-    if (DEBUG) console.log(`Adding new player: name=${name}, emoji=${emoji}, katschings=${katschings}, comment=${comment}`);
     const fullName = `${name} ${emoji}`;
     const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
 
@@ -151,7 +138,6 @@ function App({ signOut }) {
       await DataStore.save(newHistoryEntry);
       setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
-      if (DEBUG) console.log("Player added successfully.");
     } catch (err) {
       console.error("Error adding player:", err);
     }
@@ -199,8 +185,35 @@ function App({ signOut }) {
     }
   };
 
+  const deleteHistoryEntry = async (entryId) => {
+    try {
+      await DataStore.delete(HistoryEntry, entryId);
+      setHistory(history.filter(entry => entry.id !== entryId));
+    } catch (err) {
+      console.error("Error deleting history entry:", err);
+    }
+  };
+
+  const editKatschingScore = async (playerId, newScore) => {
+    try {
+      const player = players.find(p => p.id === playerId);
+      const updatedPlayer = await DataStore.save(Player.copyOf(player, item => {
+        item.katschings = newScore;
+        item.lastKatsching = new Date().toISOString();
+      }));
+
+      setPlayers(prevPlayers => {
+        const newPlayersList = prevPlayers.map(p =>
+          p.id === playerId ? updatedPlayer : p
+        );
+        return sortPlayersByKatschings(newPlayersList);
+      });
+    } catch (err) {
+      console.error("Error editing Katsching score:", err);
+    }
+  };
+
   const formatDate = (dateString) => {
-    if (DEBUG) console.log("Formatting date:", dateString);
     const date = new Date(dateString);
     const formattedDate = date.toLocaleString('en-GB', {
       hour: '2-digit',
@@ -209,13 +222,10 @@ function App({ signOut }) {
       month: '2-digit',
       year: '2-digit',
     });
-    if (DEBUG) console.log("Formatted date:", formattedDate);
     return formattedDate;
   };
 
   const copyToClipboard = () => {
-    if (DEBUG) console.log("Zur Zwischenablage hinzugefügt!");
-    
     const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
     
     let lastHistoryText = 'No recent history';
@@ -228,17 +238,14 @@ function App({ signOut }) {
     const clipboardText = `${playersText}\n\n${lastHistoryText}`;
     
     navigator.clipboard.writeText(clipboardText).then(() => {
-      if (DEBUG) console.log("Data copied to clipboard successfully.");
       setShowCopyNotification(true); // Show notification
       setTimeout(() => setShowCopyNotification(false), 1500); // Hide after 1.5 seconds
     }).catch(err => {
       console.error("Failed to copy data to clipboard:", err);
     });
   };
-  
 
-
-   return (
+  return (
     <View className="App">
       <div className="App-header">
         <h1 className="App-title">Katsching</h1>
@@ -252,9 +259,10 @@ function App({ signOut }) {
             <Table stickyHeader style={{ tableLayout: "fixed" }}>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: "40%", fontFamily: 'Irish Grover' }}>Spieler</TableCell>
-                  <TableCell style={{ width: "30%", fontFamily: 'Irish Grover' }}>Letzter Katsching</TableCell>
-                  <TableCell style={{ width: "30%", fontFamily: 'Irish Grover' }}>Katschings</TableCell>
+                  <TableCell style={{ fontFamily: 'Irish Grover' }}>Spieler</TableCell>
+                  <TableCell style={{width: "50%", fontFamily: 'Irish Grover' }}>Letzter Katsching</TableCell>
+                  <TableCell style={{ fontFamily: 'Irish Grover' }}>Katschings</TableCell>
+                  {isAdmin && <TableCell style={{ width: "10%", fontFamily: 'Irish Grover' }}>Aktionen</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -270,6 +278,11 @@ function App({ signOut }) {
                         <Button className="add-katsching-button" onClick={() => toggleKatschingPopup(player)}>+</Button>
                       </div>
                     </TableCell>
+                    {isAdmin && (
+                      <TableCell style={{ fontFamily: 'Montserrat' }}>
+                        <Button onClick={() => editKatschingScore(player.id, prompt("New Katsching Score:", player.katschings))}>Edit</Button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -301,6 +314,7 @@ function App({ signOut }) {
                 <TableCell style={{ width: "30%", fontFamily: 'Irish Grover' }}>Uhrzeit</TableCell>
                 <TableCell style={{ width: "60%", fontFamily: 'Irish Grover' }}>Event</TableCell>
                 <TableCell style={{ width: "40%", fontFamily: 'Irish Grover' }}>Kommentar</TableCell>
+                {isAdmin && <TableCell style={{ width: "10%", fontFamily: 'Irish Grover' }}>Aktionen</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -309,6 +323,11 @@ function App({ signOut }) {
                   <TableCell style={{ fontFamily: 'Montserrat' }}>{formatDate(entry.time)}</TableCell>
                   <TableCell style={{ fontFamily: 'Montserrat' }}>{entry.event}</TableCell>
                   <TableCell style={{ fontFamily: 'Montserrat' }}>{entry.comments}</TableCell>
+                  {isAdmin && (
+                    <TableCell style={{ fontFamily: 'Montserrat' }}>
+                      <Button onClick={() => deleteHistoryEntry(entry.id)}>Delete</Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
