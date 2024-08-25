@@ -318,3 +318,41 @@ div.katsching-counter{
   overflow-wrap: break-word !important;
 }
 
+.copy-container {
+  position: relative;
+  z-index: 10000;
+}
+
+.copy-notification {
+  z-index: 10000;
+  position: absolute;
+  top: -40px;
+  font-family: "Irish Grover";
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #AE2828 0%, #947B23 10%, #8AA421 20%, #1EAB35 30%, #1AA55A 40%, #1BCCB6 50%, #1966C0 60%, #671FAF 70%, #BB188D 80%, #DD124F 90%, #D80C0C 100%);
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  animation: popUp 0.5s ease-out;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Add ellipsis (...) if text overflows */
+}
+
+
+@keyframes popUp {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 /* Popup.css */
 :root {
     --primary-bg: #BCECF5;
@@ -8,8 +8,8 @@
     --text-color: #304050;
     --divider-bg: #FAFAFA;
     --divider-color: black;
-    --font-family-main: 'Irish Grover';
-    --font-family-secondary: 'Inter';
+    --font-family-main: 'Montserrat';
+    --font-family-secondary: 'Irish Grover';
     --font-size-main: 19px;
     --font-size-subtitle: 18px;
     --font-size-divider: 16px;
@@ -163,12 +163,34 @@
     gap: 13px;
     color: white;
     font-size: 16px;
-    font-family: var(--font-family-main);
+    font-family: var(--font-family-secondary);
     font-weight: 600;
     line-height: var(--line-height-divider);
     cursor: pointer;
-    box-shadow: var(--input-shadow);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); /* Added glow effect */
+    animation: moveGradient 5s linear infinite, glow 1.5s ease-in-out infinite alternate;
 }
+
+/* Keyframe animation for moving the gradient */
+@keyframes moveGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Keyframe animation for glowing effect */
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    }
+}
+
 
 
 /* Add the styles below to your existing Popup.css file */
