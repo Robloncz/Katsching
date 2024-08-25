@@ -24,12 +24,15 @@ function App({ signOut }) {
   const [history, setHistory] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isOperationInProgress, setIsOperationInProgress] = useState(false); // Lock UI during operations
+  const DEBUG = false; // Toggle this flag to enable or disable logging
+  const [showCopyNotification, setShowCopyNotification] = useState(false); // State for copy notification
 
   async function currentAuthenticatedUser() {
-    console.log("Fetching current authenticated user...");
+    if (DEBUG) console.log("Fetching current authenticated user...");
     try {
       const { username, userId, signInDetails } = await getCurrentUser();
-      console.log(`User authenticated: username=${username}, userId=${userId}, signInDetails=${signInDetails}`);
+      if (DEBUG) console.log(`User authenticated: username=${username}, userId=${userId}, signInDetails=${signInDetails}`);
       return { username, userId, signInDetails };
     } catch (err) {
       console.error("Error fetching current authenticated user:", err);
@@ -39,10 +42,10 @@ function App({ signOut }) {
 
   const fetchAllData = useCallback(async () => {
     try {
-      // Fetch players and history after DataStore has started
+      if (DEBUG) console.log("Fetching all data...");
       const playersData = await DataStore.query(Player);
       setPlayers(sortPlayersByKatschings(playersData));
-  
+
       const historyData = await DataStore.query(HistoryEntry);
       setHistory(sortHistoryByTime(historyData));
     } catch (err) {
@@ -54,15 +57,14 @@ function App({ signOut }) {
     const syncData = async () => {
       try {
         if (!DataStore.isStarted) {
-          console.log("Starting DataStore...");
+          if (DEBUG) console.log("Starting DataStore...");
           await DataStore.start();
         }
 
-        // Polling to wait for DataStore to start (max 10 seconds)
         let retries = 10;
         while (!DataStore.isStarted && retries > 0) {
-          console.log(`Waiting for DataStore to start. Retries left: ${retries}`);
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+          if (DEBUG) console.log(`Waiting for DataStore to start. Retries left: ${retries}`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
           retries--;
         }
 
@@ -79,14 +81,14 @@ function App({ signOut }) {
     };
   
     const checkAdmin = async () => {
-      console.log("Checking if user is admin...");
+      if (DEBUG) console.log("Checking if user is admin...");
       try {
         const user = await currentAuthenticatedUser();
         if (user && user.username === 'rene271') { 
-          console.log("User is admin.");
+          if (DEBUG) console.log("User is admin.");
           setIsAdmin(true);
         } else {
-          console.log("User is not admin.");
+          if (DEBUG) console.log("User is not admin.");
         }
       } catch (err) {
         console.error("Error checking admin status:", err);
@@ -98,32 +100,32 @@ function App({ signOut }) {
   }, [fetchAllData]);
 
   const sortPlayersByKatschings = (players) => {
-    console.log("Sorting players by Katschings...");
+    if (DEBUG) console.log("Sorting players by Katschings...");
     const sortedPlayers = [...players].sort((a, b) => b.katschings - a.katschings);
-    console.table(sortedPlayers);
     return sortedPlayers;
   };
 
   const sortHistoryByTime = (history) => {
-    console.log("Sorting history entries by time...");
+    if (DEBUG) console.log("Sorting history entries by time...");
     const sortedHistory = [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
-    console.table(sortedHistory);
     return sortedHistory;
   };
 
   const togglePopup = () => {
-    console.log("Toggling popup visibility...");
-    setIsPopupVisible(prev => !prev);
+    if (!isOperationInProgress) {
+      setIsPopupVisible(prev => !prev);
+    }
   };
 
   const toggleKatschingPopup = (player) => {
-    console.log("Toggling Katsching popup visibility for player:", player);
-    setSelectedPlayer(player);
-    setIsKatschingPopupVisible(prev => !prev);
+    if (!isOperationInProgress) {
+      setSelectedPlayer(player);
+      setIsKatschingPopupVisible(prev => !prev);
+    }
   };
-
+  
   const addPlayer = async (name, emoji, katschings, comment) => {
-    console.log(`Adding new player: name=${name}, emoji=${emoji}, katschings=${katschings}, comment=${comment}`);
+    if (DEBUG) console.log(`Adding new player: name=${name}, emoji=${emoji}, katschings=${katschings}, comment=${comment}`);
     const fullName = `${name} ${emoji}`;
     const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
 
@@ -135,7 +137,6 @@ function App({ signOut }) {
     });
 
     try {
-      console.log("Saving new player to DataStore...");
       await DataStore.save(newPlayer);
       const updatedPlayers = sortPlayersByKatschings([...players, newPlayer]);
       setPlayers(updatedPlayers);
@@ -147,29 +148,29 @@ function App({ signOut }) {
         comments: comment,
       });
 
-      console.log("Saving new history entry to DataStore...");
       await DataStore.save(newHistoryEntry);
       setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
-      console.log("Player added successfully.");
+      if (DEBUG) console.log("Player added successfully.");
     } catch (err) {
       console.error("Error adding player:", err);
     }
   };
 
   const addKatschings = async (katschings, comment) => {
-    if (!selectedPlayer) {
-      console.warn("No player selected for adding Katschings.");
+    if (!selectedPlayer || isOperationInProgress) {
+      console.warn("No player selected for adding Katschings or operation already in progress.");
       return;
     }
 
-    console.log(`Adding ${katschings} Katschings to player: ${selectedPlayer.name}, comment=${comment}`);
+    setIsOperationInProgress(true);
+  
     try {
-      const updatedPlayer = await DataStore.save(Player.copyOf(selectedPlayer, item => {
+      const currentSelectedPlayer = players.find(player => player.id === selectedPlayer.id);
+      const updatedPlayer = await DataStore.save(Player.copyOf(currentSelectedPlayer, item => {
         item.katschings += katschings;
         item.lastKatsching = new Date().toISOString();
       }));
-      console.log("Player updated:", updatedPlayer);
 
       setPlayers(prevPlayers => {
         const newPlayersList = prevPlayers.map(player =>
@@ -185,21 +186,21 @@ function App({ signOut }) {
         comments: comment,
       });
 
-      console.log("Saving new history entry for Katschings...");
       await DataStore.save(newHistoryEntry);
       setHistory(prevHistory => sortHistoryByTime([newHistoryEntry, ...prevHistory]));
 
-      console.log("Katschings added successfully.");
       setIsKatschingPopupVisible(false);
       setSelectedPlayer(null);
-
+  
     } catch (err) {
       console.error("Error occurred while adding Katschings:", err);
+    } finally {
+      setIsOperationInProgress(false);
     }
   };
 
   const formatDate = (dateString) => {
-    console.log("Formatting date:", dateString);
+    if (DEBUG) console.log("Formatting date:", dateString);
     const date = new Date(dateString);
     const formattedDate = date.toLocaleString('en-GB', {
       hour: '2-digit',
@@ -208,27 +209,36 @@ function App({ signOut }) {
       month: '2-digit',
       year: '2-digit',
     });
-    console.log("Formatted date:", formattedDate);
+    if (DEBUG) console.log("Formatted date:", formattedDate);
     return formattedDate;
   };
 
   const copyToClipboard = () => {
-    console.log("Copying data to clipboard...");
+    if (DEBUG) console.log("Zur Zwischenablage hinzugefügt!");
+    
     const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
-    const lastHistory = history[0];
-    const lastHistoryText = `${new Date(lastHistory.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${lastHistory.event} - Kommentar: *${lastHistory.comments}*`;
+    
+    let lastHistoryText = 'No recent history';
+    
+    if (history.length > 0) {
+      const lastHistory = history[0];
+      lastHistoryText = `${new Date(lastHistory.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${lastHistory.event} - Kommentar: *${lastHistory.comments}*`;
+    }
+  
     const clipboardText = `${playersText}\n\n${lastHistoryText}`;
     
     navigator.clipboard.writeText(clipboardText).then(() => {
-      console.log("Data copied to clipboard successfully.");
-      alert('Copied to clipboard!');
+      if (DEBUG) console.log("Data copied to clipboard successfully.");
+      setShowCopyNotification(true); // Show notification
+      setTimeout(() => setShowCopyNotification(false), 1500); // Hide after 1.5 seconds
     }).catch(err => {
       console.error("Failed to copy data to clipboard:", err);
     });
   };
+  
 
 
-  return (
+   return (
     <View className="App">
       <div className="App-header">
         <h1 className="App-title">Katsching</h1>
@@ -250,11 +260,11 @@ function App({ signOut }) {
               <TableBody>
                 {players.map((player, index) => (
                   <TableRow key={index}>
-                    <TableCell style={{ fontFamily: 'Irish Grover' }}>{player.name}</TableCell>
-                    <TableCell style={{ fontFamily: 'Irish Grover' }}>
+                    <TableCell style={{ fontFamily: 'Montserrat' }}>{player.name}</TableCell>
+                    <TableCell style={{ fontFamily: 'Montserrat' }}>
                       {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
                     </TableCell>
-                    <TableCell style={{ fontFamily: 'Irish Grover' }}>
+                    <TableCell style={{ fontFamily: 'Montserrat' }}>
                       <div className="katsching-container">
                         <div className="katsching-counter">{player.katschings}</div>
                         <Button className="add-katsching-button" onClick={() => toggleKatschingPopup(player)}>+</Button>
@@ -270,11 +280,17 @@ function App({ signOut }) {
             {isAdmin && (
               <Button className="add-player-button" onClick={togglePopup}>Neuen Wicht hinzufügen</Button>
             )}
-            <Button className="copy-to-clipboard-button" onClick={copyToClipboard}>In Zwischenablage</Button>
+            <div className="copy-container">
+              <Button className="copy-to-clipboard-button" onClick={copyToClipboard}>In Zwischenablage</Button>
+              {showCopyNotification && (
+                <div className="copy-notification">
+                  In Zwischenablage kopiert!
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Card>
-  
   
       {/* History Table */}
       <Card className="history-table-container">
@@ -290,9 +306,9 @@ function App({ signOut }) {
             <TableBody>
               {history.map((entry, index) => (
                 <TableRow key={index}>
-                  <TableCell style={{ fontFamily: 'Irish Grover' }}>{formatDate(entry.time)}</TableCell>
-                  <TableCell style={{ fontFamily: 'Irish Grover' }}>{entry.event}</TableCell>
-                  <TableCell style={{ fontFamily: 'Irish Grover' }}>{entry.comments}</TableCell>
+                  <TableCell style={{ fontFamily: 'Montserrat' }}>{formatDate(entry.time)}</TableCell>
+                  <TableCell style={{ fontFamily: 'Montserrat' }}>{entry.event}</TableCell>
+                  <TableCell style={{ fontFamily: 'Montserrat' }}>{entry.comments}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -309,10 +325,9 @@ function App({ signOut }) {
         />
       )}
       <div className="sign-out-button-container">
-        <Button className="sign-out-button" onClick={signOut}>Sign Out</Button>
+        <Button className="sign-out-button" onClick={signOut}>Abmelden</Button>
       </div>
     </View>
   );
 }  
-// be proud bro... it works.
 export default withAuthenticator(App);
