@@ -4,9 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
-import config from './aws-exports';
-Amplify.configure(config);
+import awsconfig from './aws-exports';
 
+// Configure Amplify with the custom settings
+Amplify.configure({
+  ...awsconfig,
+  Auth: {
+    storage: window.localStorage, // Use local storage to persist the session
+    authenticationFlowType: 'USER_SRP_AUTH', // Default authentication flow
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
