@@ -187,6 +187,7 @@ body {
   font-weight: 500 !important;
   cursor: pointer !important;
   justify-content: center !important;
+  z-index: 999 !important;
 }
 .update-button { 
   justify-content: center !important;
@@ -323,7 +324,7 @@ div.katsching-counter{
 
 .copy-container {
   position: relative;
-  z-index: 10000;
+  z-index: 999;
 }
 
 .copy-notification {
