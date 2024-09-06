@@ -197,8 +197,15 @@ function App({ signOut }) {
   const editKatschingScore = async (playerId, newScore) => {
     try {
       const player = players.find(p => p.id === playerId);
+      const numericScore = parseInt(newScore, 10);
+      
+      if (isNaN(numericScore)) {
+        console.error("Invalid score input");
+        return;
+      }
+
       const updatedPlayer = await DataStore.save(Player.copyOf(player, item => {
-        item.katschings = newScore;
+        item.katschings = numericScore;
         item.lastKatsching = new Date().toISOString();
       }));
 

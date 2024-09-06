@@ -1,0 +1,107 @@
+.table-container {
+  width: 95vw !important;
+  max-height: none !important; /* Remove fixed height */
+  padding: 11px 20px !important;
+  background: #dcdee0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 1px !important;
+  border-radius: 10px !important;
+  overflow-x: auto;
+  overflow-y: auto; /* Allow vertical scrolling if needed */
+}
+
+.table-header {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.table-header-cell {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: #dcdee0 !important;
+  height: 18px !important;
+  padding: 0 15px !important;
+  white-space: nowrap !important;
+}
+
+.table-header-cell:last-child {
+  width: 0 !important;
+}
+
+.table-header-text {
+  color: #0d1a26 !important;
+  font-size: 16px !important;
+  font-family: 'Irish Grover', cursive !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  line-height: 18px !important;
+  word-wrap: break-word !important;
+  text-align: center !important;
+}
+
+.table-row {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.table-cell {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: #dcdee0 !important;
+  padding: 0 15px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  color: #0d1a26 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: center !important;
+}
+
+.table-header-cell,
+.table-cell {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.katsching-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+
+.katsching-counter {
+  align-items: center !important;
+  width: 10px !important;
+}
+
+.add-katsching-button {
+  background: #EFF0F0 !important;
+  border-radius: 30% !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  margin-left: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .MuiTableCell-root {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
