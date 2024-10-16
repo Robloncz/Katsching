@@ -26,7 +26,7 @@ function App({ signOut }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showCopyNotification, setShowCopyNotification] = useState(false);
-  const [numHistoryEntries, setNumHistoryEntries] = useState(5); // Default to 5 entries
+  const [numHistoryEntries, setNumHistoryEntries] = useState(1); // Default to 1 entries
 
   const fetchAllData = useCallback(async () => {
     try {
