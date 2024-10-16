@@ -386,3 +386,79 @@ div.katsching-counter{
     padding: 6px;
   }
 }
+
+.whatsapp-button {
+  padding: 10px !important;
+  margin-top: 20px !important;
+  margin-left: 5px !important;
+  background: #25D366 !important; /* WhatsApp green color */
+  border-radius: 50% !important; /* Make it circular */
+  color: white !important;
+  cursor: pointer !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 999 !important;
+  border: none !important;
+  width: 40px !important; /* Set a fixed width */
+  height: 40px !important; /* Set a fixed height */
+}
+
+.whatsapp-icon {
+  width: 36px !important;
+  height: 36px !important;
+  fill: white !important;
+}
+
+/* Adjust the copy-container to align items */
+.copy-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Adjust the existing copy-to-clipboard-button if needed */
+.copy-to-clipboard-button {
+  /* ... existing styles ... */
+  height: 40px !important; /* Match the height of the WhatsApp button */
+}
+
+.history-selection-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px; /* Add top margin to align with other elements */
+  margin-left: 5px; /* Add left margin to align with other buttons */
+
+  border-radius: 23px; /* Match the border radius of buttons */
+  padding: 5px 10px; /* Add padding for a consistent look */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #304050;
+}
+
+#numEntries {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #EFF0F0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #304050;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease;
+  margin-left: 5px;
+
+}
+
+#numEntries:hover {
+  border-color: #89949F;
+}
+
+#numEntries:focus {
+  border-color: #304050;
+}

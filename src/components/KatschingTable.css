@@ -1,16 +1,10 @@
 .table-container {
-  width: 95vw !important;
-  max-height: none !important; /* Remove fixed height */
-  padding: 11px 20px !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
   background: #dcdee0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  align-items: flex-start !important;
-  gap: 1px !important;
   border-radius: 10px !important;
-  overflow-x: auto;
-  overflow-y: auto; /* Allow vertical scrolling if needed */
+  overflow: hidden !important;
 }
 
 .table-header {
@@ -37,8 +31,8 @@
 .table-header-text {
   color: #0d1a26 !important;
   font-size: 16px !important;
-  font-family: 'Irish Grover', cursive !important;
-  font-weight: 700 !important;
+  font-family: 'Montserrat' !important;
+  font-weight: 1000 !important;
   text-decoration: underline !important;
   line-height: 18px !important;
   word-wrap: break-word !important;
@@ -83,7 +77,7 @@
 }
 
 .katsching-counter {
-  align-items: center !important;
+  text-align: right !important;
   width: 10px !important;
 }
 
@@ -92,6 +86,7 @@
   border-radius: 30% !important;
   width: 24px !important;
   height: 24px !important;
+  min-width: 24px !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -101,7 +96,85 @@
 
 @media (max-width: 768px) {
   .MuiTableCell-root {
-    font-size: 12px;
-    padding: 6px;
+    font-size: 12px !important;
+    padding: 6px !important;
   }
+}
+
+.MuiTableContainer-root {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
+}
+
+.MuiTable-root {
+  width: 100% !important;
+  height: 100% !important;
+  table-layout: fixed !important;
+}
+
+.MuiTableCell-root {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+}
+
+.MuiTableCell-head {
+  font-family: 'Montserrat', cursive !important;
+  background-color: #dcdee0 !important;
+}
+
+.MuiTableCell-body {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.player-name-cell {
+  width: 25% !important;
+}
+
+.last-katsching-cell {
+  width: 40% !important;
+}
+
+.katschings-cell {
+  width: 25% !important;
+}
+
+.actions-cell {
+  width: 10% !important;
+}
+
+.MuiTableHead-root {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1 !important;
+  background-color: #dcdee0 !important;
+}
+
+.funny-button {
+  transition: all 0.3s ease !important;
+}
+
+.funny-button:hover {
+  transform: scale(1.2) rotate(15deg) !important;
+  background-color: #3be2ff !important;
+  box-shadow: 0 0 10px rgba(255, 235, 59, 0.7) !important;
+}
+
+.funny-button:active {
+  transform: scale(0.9) rotate(-15deg) !important;
+  background-color: #20a1cc !important;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.funny-button:focus {
+  animation: wiggle 0.5s ease-in-out;
+  outline: none !important;
 }

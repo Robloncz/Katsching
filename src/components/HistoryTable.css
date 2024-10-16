@@ -1,0 +1,106 @@
+.history-table-container {
+    width: 91% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    background: #dcdee0 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+  }
+  
+  .MuiTableContainer-root {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+  
+  .MuiTable-root {
+    width: 100% !important;
+    height: 100% !important;
+    table-layout: fixed !important;
+  }
+  
+  .table-header {
+    font-family: 'Montserrat', cursive !important;
+    background-color: #dcdee0 !important;
+    font-weight: 700 !important;
+    text-decoration: underline !important;
+    color: #0d1a26 !important;
+    font-size: 16px !important;
+    text-align: left !important;
+    padding: 12px 15px !important;
+  }
+  
+  .table-cell {
+    font-family: 'Montserrat', sans-serif !important;
+    color: #0d1a26 !important;
+    font-size: 14px !important;
+    padding: 12px 15px !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  
+  .time-cell {
+    width: 20% !important;
+  }
+  
+  .event-cell {
+    width: 25% !important;
+  }
+  
+  .comment-cell {
+    width: 45% !important;
+  }
+  
+  .actions-cell {
+    width: 10% !important;
+    text-align: center !important;
+  }
+  
+  .delete-button {
+    color: #ff4d4f !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .delete-button:hover {
+    color: #ff7875 !important;
+    transform: scale(1.1) !important;
+  }
+  
+  .MuiTableHead-root {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1 !important;
+    background-color: #dcdee0 !important;
+  }
+  
+  @media (max-width: 768px) {
+    .table-cell, .table-header {
+      font-size: 12px !important;
+      padding: 8px !important;
+    }
+    
+    .time-cell {
+      width: 25% !important;
+    }
+    
+    .event-cell {
+      width: 30% !important;
+    }
+    
+    .comment-cell {
+      width: 35% !important;
+    }
+    
+    .actions-cell {
+      width: 10% !important;
+    }
+  }
+
+/* Add this new style for the table header cells */
+.MuiTableCell-head {
+  font-weight: 700 !important;
+  font-family: 'Montserrat', cursive !important;
+}

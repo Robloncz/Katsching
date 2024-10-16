@@ -1,35 +1,54 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import './KatschingTable.css';
 
-const KatschingTable = ({ players, isAdmin, formatDate, toggleKatschingPopup, editKatschingScore }) => {
+const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingScore }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
-      <Table stickyHeader style={{ tableLayout: "fixed" }}>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell style={{ fontFamily: 'Irish Grover' }}>Spieler</TableCell>
-            <TableCell style={{width: "50%", fontFamily: 'Irish Grover' }}>Letzter Katsching</TableCell>
-            <TableCell style={{ fontFamily: 'Irish Grover' }}>Katschings</TableCell>
-            {isAdmin && <TableCell style={{ width: "10%", fontFamily: 'Irish Grover' }}>Aktionen</TableCell>}
+            <TableCell>Spieler</TableCell>
+            <TableCell className="last-katsching-cell">Letzter Katsching</TableCell>
+            <TableCell>Katschings</TableCell>
+            {isAdmin && <TableCell className="actions-cell">Aktionen</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {players.map((player, index) => (
             <TableRow key={index}>
-              <TableCell style={{ fontFamily: 'Montserrat' }}>{player.name}</TableCell>
-              <TableCell style={{ fontFamily: 'Montserrat' }}>
+              <TableCell className="player-name-cell">{player.name}</TableCell>
+              <TableCell>
                 {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
               </TableCell>
-              <TableCell style={{ fontFamily: 'Montserrat' }}>
+              <TableCell>
                 <div className="katsching-container">
                   <div className="katsching-counter">{player.katschings}</div>
-                  <Button className="add-katsching-button" onClick={() => toggleKatschingPopup(player)}>+</Button>
+                  <IconButton 
+                    className="add-katsching-button funny-button" 
+                    onClick={() => toggleKatschingPopup(player)}
+                  >
+                    <AddIcon fontSize="small" />
+                  </IconButton>
                 </div>
               </TableCell>
               {isAdmin && (
-                <TableCell style={{ fontFamily: 'Montserrat' }}>
-                  <Button onClick={() => editKatschingScore(player.id, prompt("New Katsching Score:", player.katschings))}>Edit</Button>
+                <TableCell>
+                  <IconButton onClick={() => editKatschingScore(player.id, prompt("New Katsching Score:", player.katschings))}>
+                    Edit
+                  </IconButton>
                 </TableCell>
               )}
             </TableRow>

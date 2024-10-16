@@ -1,6 +1,6 @@
 type Player @model
   @auth(rules: [
-    { allow: public }
+    { allow: private }
   ]) {
   id: ID!
   name: String!
@@ -12,7 +12,7 @@ type Player @model
 
 type HistoryEntry @model
   @auth(rules: [
-    { allow: public}
+    { allow: private }
   ]) {
   id: ID!
   playerId: ID! @index(name: "byPlayer", sortKeyFields: ["time"])
@@ -21,3 +21,21 @@ type HistoryEntry @model
   comments: String
 }
 
+type Query {
+  getPlayer(id: ID!): Player @auth(rules: [{ allow: private }])
+  listPlayers(filter: ModelPlayerFilterInput, limit: Int, nextToken: String): ModelPlayerConnection @auth(rules: [{ allow: private }])
+}
+
+type Mutation {
+  createPlayer(input: CreatePlayerInput!, condition: ModelPlayerConditionInput): Player @auth(rules: [{ allow: private }])
+  updatePlayer(input: UpdatePlayerInput!, condition: ModelPlayerConditionInput): Player @auth(rules: [{ allow: private }])
+}
+
+type Subscription {
+  onCreatePlayer(filter: ModelSubscriptionPlayerFilterInput): Player
+    @aws_subscribe(mutations: ["createPlayer"])
+    @auth(rules: [{ allow: private }])
+  onUpdatePlayer(filter: ModelSubscriptionPlayerFilterInput): Player
+    @aws_subscribe(mutations: ["updatePlayer"])
+    @auth(rules: [{ allow: private }])
+}

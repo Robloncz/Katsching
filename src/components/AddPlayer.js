@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import './Popup.css';
+import './AddPlayer.css';
+import { Player, HistoryEntry } from '../models';
 
 const Popup = ({ isVisible, togglePopup, addPlayer }) => {
     const [emoji, setEmoji] = useState('💸'); // Default emoji
@@ -33,11 +34,28 @@ const Popup = ({ isVisible, togglePopup, addPlayer }) => {
     };
 
     const handleAddPlayer = () => {
-        addPlayer(name, emoji, katschings, comment); // Pass the comment to the addPlayer function
-        togglePopup(); // Close the popup after adding a player
-        setName(''); // Reset the name input
-        setKatschings(1); // Reset the katschings input
-        setComment(''); // Reset the comment input
+        const fullName = `${name} ${emoji}`;
+        const katschingText = katschings === 1 ? 'Katsching' : 'Katschings';
+
+        const newPlayer = new Player({
+            name: fullName,
+            emoji,
+            katschings,
+            lastKatsching: new Date().toISOString(),
+        });
+
+        const newHistoryEntry = new HistoryEntry({
+            playerId: newPlayer.id,
+            time: new Date().toISOString(),
+            event: `${fullName} wurde als neuer Spieler hinzugefügt. ${katschings} ${katschingText}`,
+            comments: comment,
+        });
+
+        addPlayer(newPlayer, newHistoryEntry);
+        togglePopup();
+        setName('');
+        setKatschings(1);
+        setComment('');
     };
 
     const handleKatschingsChange = (e) => {
