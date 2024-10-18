@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import AddIcon from '@mui/icons-material/Add';
 import './KatschingTable.css';
 
-const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingScore }) => {
+const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingScore, isLoggedIn }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-GB', {
@@ -36,12 +36,14 @@ const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingS
               <TableCell>
                 <div className="katsching-container">
                   <div className="katsching-counter">{player.katschings}</div>
-                  <IconButton 
-                    className="add-katsching-button funny-button" 
-                    onClick={() => toggleKatschingPopup(player)}
-                  >
-                    <AddIcon fontSize="small" />
-                  </IconButton>
+                  {isLoggedIn && (
+                    <IconButton 
+                      className="add-katsching-button funny-button" 
+                      onClick={() => toggleKatschingPopup(player)}
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  )}
                 </div>
               </TableCell>
               {isAdmin && (

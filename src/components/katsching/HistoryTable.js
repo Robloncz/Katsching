@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataStore } from 'aws-amplify/datastore';
-import { HistoryEntry } from '../models';
+import { HistoryEntry } from '../../models';
 import './HistoryTable.css';
 
-const HistoryTable = ({ isAdmin }) => {
+const HistoryTable = ({ isAdmin, refreshTrigger }) => {
   const [history, setHistory] = useState([]);
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+  const sortHistoryByTime = (history) => {
+    return [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
+  };
 
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     try {
       const historyData = await DataStore.query(HistoryEntry);
       setHistory(sortHistoryByTime(historyData));
     } catch (err) {
       console.error('Error fetching history:', err);
     }
-  };
+  }, []);
 
-  const sortHistoryByTime = (history) => {
-    return [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
-  };
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory, refreshTrigger]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

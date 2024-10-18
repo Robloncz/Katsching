@@ -1,0 +1,199 @@
+.statistics-container {
+  width: 85%;
+  height: 85vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Media queries for responsive height */
+@media screen and (max-width: 1200px) {
+  .statistics-container {
+    height: 75h;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .statistics-container {
+    height: 70vh;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .statistics-container {
+    height: 80vh;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .statistics-container {
+    height: 75vh;
+  }
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.player-filter {
+  width: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-right: 20px;
+  border-right: 1px solid #ccc;
+}
+
+.player-filter label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.player-filter input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.katsching-count {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.chart-container {
+  width: 100%;
+  height: calc(100% - 120px); /* Increase the subtracted value to make room for the legend */
+  margin-bottom: 60px; /* Increase bottom margin */
+}
+
+.custom-tooltip {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  transition: none !important;
+}
+
+.custom-tooltip .label {
+  margin: 0;
+  font-weight: bold;
+}
+
+.custom-tooltip p {
+  margin: 0;
+  padding: 3px 0;
+}
+
+.recharts-default-tooltip {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  padding: 10px !important;
+}
+
+.recharts-tooltip-label {
+  font-weight: bold !important;
+  margin-bottom: 5px !important;
+}
+
+.recharts-tooltip-item {
+  padding: 2px 0 !important;
+}
+
+.recharts-legend-wrapper {
+  bottom: -40px !important; /* Move the legend down */
+}
+
+.recharts-default-legend {
+  text-align: center;
+}
+
+.recharts-legend-item {
+  cursor: pointer !important;
+  margin: 0 10px !important; /* Add some horizontal spacing between legend items */
+}
+
+.axis-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.axis-controls button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.axis-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+.recharts-tooltip-wrapper {
+  transition: none !important;
+}
+
+.custom-legend {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 10px 5px 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.legend-item.hidden {
+  opacity: 0.5;
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.legend-text {
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.toggle-all-button {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle-all-button:hover {
+  background-color: #e0e0e0;
+}

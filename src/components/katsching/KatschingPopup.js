@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './KatschingPopup.css';
-import { Player, HistoryEntry } from '../models';
+import { Player, HistoryEntry } from '../../models';
 import { DataStore } from 'aws-amplify/datastore';
 
-const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer }) => {
+const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer, refreshHistory }) => {
     const [comment, setComment] = useState('');
     const [isAnimating, setIsAnimating] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
@@ -11,17 +11,25 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer 
     const popupRef = useRef(null);
     const commentRef = useRef(null);
 
+    const closePopup = useCallback(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+            togglePopup();
+            setIsClosing(false);
+        }, 300);
+    }, [togglePopup]);
+
     useEffect(() => {
         if (isVisible) {
             setIsAnimating(true);
             setIsClosing(false);
-            setTimeout(() => setIsAnimating(false), 500);
+            setTimeout(() => setIsAnimating(false), 400);
         } else {
             setIsClosing(true);
             setTimeout(() => {
                 setIsClosing(false);
                 setIsAnimating(false);
-            }, 500);
+            }, 300);
         }
     }, [isVisible]);
 
@@ -36,21 +44,13 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [closePopup]);
 
     useEffect(() => {
         if (isVisible && commentRef.current) {
             commentRef.current.focus();
         }
     }, [isVisible]);
-
-    const closePopup = () => {
-        setIsClosing(true);
-        setTimeout(() => {
-            togglePopup();
-            setIsClosing(false);
-        }, 500);
-    };
 
     const handleAddKatsching = async () => {
         if (selectedPlayer) {
@@ -79,6 +79,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer 
                 console.log("Katsching added successfully");
                 setComment('');
                 closePopup();
+                refreshHistory(); // Call the refreshHistory function after adding a Katsching
             } catch (error) {
                 console.error("Error adding Katsching:", error);
                 alert("Failed to add Katsching. Please try again.");

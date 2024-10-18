@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import './AddPlayer.css';
-import { Player, HistoryEntry } from '../models';
+import { Player, HistoryEntry } from '../../models';
 
 const Popup = ({ isVisible, togglePopup, addPlayer }) => {
     const [emoji, setEmoji] = useState('💸'); // Default emoji

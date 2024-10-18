@@ -21,3 +21,11 @@ type HistoryEntry @model
   comments: String
 }
 
+type Rule @model 
+  @auth(rules: [
+    { allow: public }
+  ]) {
+  id: ID!
+  content: String!
+  approved: Boolean!
+}

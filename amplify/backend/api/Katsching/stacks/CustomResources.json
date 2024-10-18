@@ -23,46 +23,13 @@
     },
     "S3DeploymentRootKey": {
       "Type": "String",
-      "Description": "An S3 key relative to the S3DeploymentBucket that points to the root of the deployment directory."
+      "Description": "An S3 key relative to the S3DeploymentBucket that points to the root\nof the deployment directory."
     }
   },
   "Resources": {
-    "AddKatschingsResolver": {
-      "Type": "AWS::AppSync::Resolver",
-      "Properties": {
-        "ApiId": {
-          "Ref": "AppSyncApiId"
-        },
-        "DataSourceName": "PlayerTable",
-        "TypeName": "Mutation",
-        "FieldName": "addKatschings",
-        "RequestMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addKatschings.req.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        },
-        "ResponseMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/addKatschings.res.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        }
-      }
+    "EmptyResource": {
+      "Type": "Custom::EmptyResource",
+      "Condition": "AlwaysFalse"
     }
   },
   "Conditions": {
@@ -77,7 +44,15 @@
           ]
         }
       ]
+    },
+    "AlwaysFalse": {
+      "Fn::Equals": ["true", "false"]
     }
   },
-  "Outputs": {}
+  "Outputs": {
+    "EmptyOutput": {
+      "Description": "An empty output. You may delete this if you have at least one resource above.",
+      "Value": ""
+    }
+  }
 }
