@@ -13,6 +13,7 @@ const Statistics = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [hiddenPlayers, setHiddenPlayers] = useState(new Set());
   const [allHidden, setAllHidden] = useState(false);
+  const [chartHeight, setChartHeight] = useState(60);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isVeryNarrow = useMediaQuery({ maxWidth: 576 });
 
@@ -215,10 +216,26 @@ const Statistics = () => {
     return sortedChartData;
   };
 
+  const handleChartResize = (event) => {
+    setChartHeight(event.target.value);
+  };
+
   return (
     <div className="statistics-container">
       <h1>Katschingistik</h1>
-      <div className="chart-container">
+      {isMobile && (
+        <div className="chart-resize-control">
+          <input
+            type="range"
+            min="30"
+            max="90"
+            value={chartHeight}
+            onChange={handleChartResize}
+            className="chart-resize-slider"
+          />
+        </div>
+      )}
+      <div className="chart-container" style={{ height: `${chartHeight}vh` }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -227,11 +244,14 @@ const Statistics = () => {
               type="category"
               allowDuplicatedCategory={false}
               label={{ value: 'Woche', position: 'insideBottom', offset: -10 }}
+              tick={isMobile ? { fontSize: 10, angle: -45, textAnchor: 'end' } : {}}
+              height={isMobile ? 60 : 30}
+              interval={isMobile ? 'preserveStartEnd' : 0}
             />
             <YAxis label={{ value: 'Total Katschings', angle: -90, position: 'insideLeft' }} />
             <Tooltip content={<CustomTooltip />} />
             <Legend content={<CustomLegend />} />
-            {getAdjustedChartData().map((player, index) => (
+            {sortedChartData.map((player, index) => (
               <Line
                 key={player.playerName}
                 data={player.data}

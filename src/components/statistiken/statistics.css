@@ -1,6 +1,7 @@
 .statistics-container {
   width: 95%;
-  height: 90vh;
+  height: auto;
+
   padding: 10px;
   box-sizing: border-box;
   background-color: #f5f5f5;
@@ -27,13 +28,13 @@
 @media screen and (max-width: 768px) {
   .statistics-container {
     width: 98%;
-    height: 60vh;
+    min-height: 60vh;
     padding: 5px;
     margin: 5px auto;
   }
 
   .chart-container {
-    height: calc(100% - 130px);
+    height: 60vh;
     margin-bottom: 30px;
   }
 
@@ -47,7 +48,12 @@
   }
 
   .legend-item {
-    margin: 0 5px 3px 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    padding: 2px 5px; /* Add this line to reduce padding */
+    margin: 0 2px 2px 0; /* Add this line to reduce margin */
   }
 
   .toggle-all-button {
@@ -88,8 +94,8 @@ h1 {
 .player-filter {
   width: 200px;
   overflow-y: auto;
-  padding-right: 10px;
-  margin-right: 20px;
+  padding-right: 5px;
+  margin-right: 5px;
   border-right: 1px solid #ccc;
 }
 
@@ -198,7 +204,6 @@ h1 {
 .legend-item {
   display: flex;
   align-items: center;
-  margin: 0 10px 5px 0;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
@@ -232,4 +237,48 @@ h1 {
 
 .toggle-all-button:hover {
   background-color: #e0e0e0;
+}
+
+.chart-resize-control {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.chart-resize-slider {
+  width: 80%;
+  max-width: 300px;
+}
+
+/* Improve the appearance of the range input for better cross-browser compatibility */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+input[type="range"]:hover {
+  opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
 }
