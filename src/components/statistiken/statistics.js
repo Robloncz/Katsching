@@ -27,7 +27,7 @@ const Statistics = () => {
         setPlayers(playersData);
 
         const playerKatschings = {};
-        const allWeeks = new Set();
+        const allDates = new Set();
         const playerFirstAppearance = {};
 
         // Initialize playerKatschings and playerFirstAppearance
@@ -43,23 +43,22 @@ const Statistics = () => {
 
         sortedEntries.forEach(entry => {
           const date = new Date(entry.time);
-          const weekStart = new Date(date.setDate(date.getDate() - date.getDay()));
-          const formattedWeek = weekStart.toISOString().split('T')[0];
-          allWeeks.add(formattedWeek);
+          const formattedDate = date.toISOString().split('T')[0];
+          allDates.add(formattedDate);
 
           const processEntry = (playerName, katschingCount) => {
             if (playerName && !isNaN(katschingCount)) {
               if (!playerKatschings[playerName]) {
                 playerKatschings[playerName] = { history: {} };
               }
-              if (!playerKatschings[playerName].history[formattedWeek]) {
-                playerKatschings[playerName].history[formattedWeek] = 0;
+              if (!playerKatschings[playerName].history[formattedDate]) {
+                playerKatschings[playerName].history[formattedDate] = 0;
               }
-              playerKatschings[playerName].history[formattedWeek] += katschingCount;
+              playerKatschings[playerName].history[formattedDate] += katschingCount;
 
               // Update first appearance if not set
               if (!playerFirstAppearance[playerName]) {
-                playerFirstAppearance[playerName] = formattedWeek;
+                playerFirstAppearance[playerName] = formattedDate;
               }
             }
           };
@@ -78,22 +77,22 @@ const Statistics = () => {
           }
         });
 
-        const sortedWeeks = Array.from(allWeeks).sort();
+        const sortedDates = Array.from(allDates).sort();
 
         const filledData = Object.entries(playerKatschings).map(([playerName, data]) => {
           let runningTotal = 0;
-          const firstWeek = playerFirstAppearance[playerName];
-          const firstWeekIndex = sortedWeeks.indexOf(firstWeek);
+          const firstDate = playerFirstAppearance[playerName];
+          const firstDateIndex = sortedDates.indexOf(firstDate);
 
-          const filledDataPoints = sortedWeeks.map((week, index) => {
-            if (index < firstWeekIndex) {
+          const filledDataPoints = sortedDates.map((date, index) => {
+            if (index < firstDateIndex) {
               // Before first appearance, use the initial value
-              return { week, totalKatschings: Object.values(data.history)[0] || 0 };
+              return { date, totalKatschings: Object.values(data.history)[0] || 0 };
             } else {
-              if (data.history[week] !== undefined) {
-                runningTotal += data.history[week];
+              if (data.history[date] !== undefined) {
+                runningTotal += data.history[date];
               }
-              return { week, totalKatschings: runningTotal };
+              return { date, totalKatschings: runningTotal };
             }
           });
 
@@ -230,27 +229,25 @@ const Statistics = () => {
   return (
     <div className="statistics-container" style={{ height: `${chartHeight + 30}vh` }}>
       <h1>Katschingistik</h1>
-      {isMobile && (
-        <div className="chart-resize-control">
-          <input
-            type="range"
-            min="30"
-            max="90"
-            value={chartHeight}
-            onChange={handleChartResize}
-            className="chart-resize-slider"
-          />
-        </div>
-      )}
+      <div className="chart-resize-control">
+        <input
+          type="range"
+          min="30"
+          max="90"
+          value={chartHeight}
+          onChange={handleChartResize}
+          className="chart-resize-slider"
+        />
+      </div>
       <div className="chart-container" style={{ height: `${chartHeight}vh` }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
-              dataKey="week" 
+              dataKey="date" 
               type="category"
               allowDuplicatedCategory={false}
-              label={{ value: 'Woche', position: 'insideBottom', offset: -10 }}
+              label={{ value: 'Datum', position: 'insideBottom', offset: -10 }}
               tick={isMobile ? { fontSize: 10, angle: -45, textAnchor: 'end' } : {}}
               height={isMobile ? 60 : 30}
               interval={isMobile ? 'preserveStartEnd' : 0}

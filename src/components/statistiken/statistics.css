@@ -240,13 +240,49 @@ h1 {
 }
 
 .chart-resize-control {
-  margin-bottom: 10px;
+  margin: 10px auto;
   text-align: center;
+  width: 80%;
+  max-width: 300px;
 }
 
 .chart-resize-slider {
-  width: 80%;
-  max-width: 300px;
+  width: 100%;
+  -webkit-appearance: none;
+  height: 10px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.chart-resize-slider:hover {
+  opacity: 1;
+}
+
+.chart-resize-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.chart-resize-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .chart-resize-control {
+    width: 90%;
+  }
 }
 
 /* Improve the appearance of the range input for better cross-browser compatibility */
