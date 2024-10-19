@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { DataStore } from 'aws-amplify/datastore';
 import { HistoryEntry, Player } from '../../models';
 import './statistics.css';
+import { useMediaQuery } from 'react-responsive';
 
 const Statistics = () => {
   const [chartData, setChartData] = useState([]);
@@ -12,6 +13,8 @@ const Statistics = () => {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [hiddenPlayers, setHiddenPlayers] = useState(new Set());
   const [allHidden, setAllHidden] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isVeryNarrow = useMediaQuery({ maxWidth: 576 });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,12 +27,14 @@ const Statistics = () => {
 
         const playerKatschings = {};
         const allWeeks = new Set();
+        const playerFirstAppearance = {};
 
-        // Initialize playerKatschings
+        // Initialize playerKatschings and playerFirstAppearance
         playersData.forEach(player => {
           playerKatschings[player.name] = { 
             history: {}
           };
+          playerFirstAppearance[player.name] = null;
         });
 
         // Sort history entries by time in ascending order (oldest first)
@@ -50,6 +55,11 @@ const Statistics = () => {
                 playerKatschings[playerName].history[formattedWeek] = 0;
               }
               playerKatschings[playerName].history[formattedWeek] += katschingCount;
+
+              // Update first appearance if not set
+              if (!playerFirstAppearance[playerName]) {
+                playerFirstAppearance[playerName] = formattedWeek;
+              }
             }
           };
 
@@ -60,7 +70,6 @@ const Statistics = () => {
               processEntry(match[1], parseInt(match[2]));
             }
           } else if (entry.event.includes('Katsching')) {
-            // Updated regex to handle multiple Katschings and plural form
             const matches = entry.event.matchAll(/(\d+) Katsching(?:s)? für (.+?)(?=\.\s\d+|$)/g);
             for (const match of matches) {
               processEntry(match[2].trim(), parseInt(match[1]));
@@ -72,11 +81,19 @@ const Statistics = () => {
 
         const filledData = Object.entries(playerKatschings).map(([playerName, data]) => {
           let runningTotal = 0;
-          const filledDataPoints = sortedWeeks.map(week => {
-            if (data.history[week] !== undefined) {
-              runningTotal += data.history[week];
+          const firstWeek = playerFirstAppearance[playerName];
+          const firstWeekIndex = sortedWeeks.indexOf(firstWeek);
+
+          const filledDataPoints = sortedWeeks.map((week, index) => {
+            if (index < firstWeekIndex) {
+              // Before first appearance, use the initial value
+              return { week, totalKatschings: Object.values(data.history)[0] || 0 };
+            } else {
+              if (data.history[week] !== undefined) {
+                runningTotal += data.history[week];
+              }
+              return { week, totalKatschings: runningTotal };
             }
-            return { week, totalKatschings: runningTotal };
           });
 
           return { playerName, data: filledDataPoints };
@@ -84,13 +101,8 @@ const Statistics = () => {
 
         setChartData(filledData);
 
-        // Clustered console logs
-    //     console.log('History Entries:', historyEntries);
-    //     console.log('Players Data:', playersData);
-    //     console.log('Player Katschings:', playerKatschings);
-    //     console.log('Filled Data:', filledData);
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error);
+      } catch (error) {
+        console.error('Error fetching data:', error);
         setError('An error occurred while fetching data. Please try again later.');
       } finally {
         setLoading(false);
@@ -185,6 +197,24 @@ const Statistics = () => {
     return <div className="statistics-container"><h1>No data available for the chart</h1></div>;
   }
 
+  // Function to reduce data points for smaller screens
+  const getAdjustedChartData = () => {
+    if (isVeryNarrow) {
+      // Show only every 4th data point on very narrow screens
+      return sortedChartData.map(player => ({
+        ...player,
+        data: player.data.filter((_, index) => index % 4 === 0)
+      }));
+    } else if (isMobile) {
+      // Show only every 2nd data point on mobile screens
+      return sortedChartData.map(player => ({
+        ...player,
+        data: player.data.filter((_, index) => index % 2 === 0)
+      }));
+    }
+    return sortedChartData;
+  };
+
   return (
     <div className="statistics-container">
       <h1>Katschingistik</h1>
@@ -201,7 +231,7 @@ const Statistics = () => {
             <YAxis label={{ value: 'Total Katschings', angle: -90, position: 'insideLeft' }} />
             <Tooltip content={<CustomTooltip />} />
             <Legend content={<CustomLegend />} />
-            {sortedChartData.map((player, index) => (
+            {getAdjustedChartData().map((player, index) => (
               <Line
                 key={player.playerName}
                 data={player.data}
