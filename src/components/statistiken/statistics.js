@@ -14,6 +14,7 @@ const Statistics = () => {
   const [hiddenPlayers, setHiddenPlayers] = useState(new Set());
   const [allHidden, setAllHidden] = useState(false);
   const [chartHeight, setChartHeight] = useState(60);
+  const [yAxisDomain, setYAxisDomain] = useState([0, 'auto']);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isVeryNarrow = useMediaQuery({ maxWidth: 576 });
 
@@ -121,6 +122,33 @@ const Statistics = () => {
     return b.data[lastIndexB].totalKatschings - a.data[lastIndexA].totalKatschings;
   });
 
+  const calculateYAxisDomain = (data, hiddenPlayers) => {
+    let min = Infinity;
+    let max = -Infinity;
+
+    data.forEach(player => {
+      if (!hiddenPlayers.has(player.playerName)) {
+        player.data.forEach(point => {
+          if (point.totalKatschings < min) min = point.totalKatschings;
+          if (point.totalKatschings > max) max = point.totalKatschings;
+        });
+      }
+    });
+
+    // If all players are hidden, return default domain
+    if (min === Infinity || max === -Infinity) {
+      return [0, 'auto'];
+    }
+
+    // Calculate nice round numbers for the domain
+    const range = max - min;
+    const step = Math.pow(10, Math.floor(Math.log10(range)));
+    const lowerBound = Math.floor(min / step) * step;
+    const upperBound = Math.ceil(max / step) * step;
+
+    return [lowerBound, upperBound];
+  };
+
   const togglePlayerVisibility = (playerName) => {
     setHiddenPlayers(prevHiddenPlayers => {
       const newHiddenPlayers = new Set(prevHiddenPlayers);
@@ -129,6 +157,8 @@ const Statistics = () => {
       } else {
         newHiddenPlayers.add(playerName);
       }
+      // Calculate new Y-axis domain after toggling player visibility
+      setYAxisDomain(calculateYAxisDomain(sortedChartData, newHiddenPlayers));
       return newHiddenPlayers;
     });
   };
@@ -136,8 +166,11 @@ const Statistics = () => {
   const toggleAllPlayers = () => {
     if (allHidden) {
       setHiddenPlayers(new Set());
+      setYAxisDomain(calculateYAxisDomain(sortedChartData, new Set()));
     } else {
-      setHiddenPlayers(new Set(sortedChartData.map(player => player.playerName)));
+      const allPlayers = new Set(sortedChartData.map(player => player.playerName));
+      setHiddenPlayers(allPlayers);
+      setYAxisDomain([0, 'auto']); // Reset to default when all players are hidden
     }
     setAllHidden(!allHidden);
   };
@@ -252,7 +285,13 @@ const Statistics = () => {
               height={isMobile ? 60 : 30}
               interval={isMobile ? 'preserveStartEnd' : 0}
             />
-            <YAxis label={{ value: 'Total Katschings', angle: -90, position: 'insideLeft' }} />
+            <YAxis 
+              label={{ value: 'Total Katschings', angle: -90, position: 'insideLeft' }} 
+              domain={yAxisDomain}
+              allowDataOverflow={true}
+              scale="linear"
+              type="number"
+            />
             <Tooltip content={<CustomTooltip />} />
             <Legend content={<CustomLegend />} />
             {sortedChartData.map((player, index) => (
