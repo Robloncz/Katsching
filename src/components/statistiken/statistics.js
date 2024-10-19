@@ -178,14 +178,21 @@ const Statistics = () => {
     setActiveTooltip(null);
   };
 
-  const CustomTooltip = () => {
-    if (activeTooltip) {
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      // Sort the payload by value in descending order
+      const sortedPayload = payload
+        .filter(entry => !hiddenPlayers.has(entry.name))
+        .sort((a, b) => b.value - a.value);
+
       return (
         <div className="custom-tooltip">
-          <p className="label">{`Woche: ${activeTooltip.week}`}</p>
-          <p style={{ color: activeTooltip.color }}>
-            {`${activeTooltip.playerName}: ${activeTooltip.value}`}
-          </p>
+          <p className="label">{`Woche: ${label}`}</p>
+          {sortedPayload.map((entry, index) => (
+            <p key={index} style={{ color: entry.color }}>
+              {`${entry.name}: ${entry.value}`}
+            </p>
+          ))}
         </div>
       );
     }
@@ -221,7 +228,7 @@ const Statistics = () => {
   };
 
   return (
-    <div className="statistics-container">
+    <div className="statistics-container" style={{ height: `${chartHeight + 30}vh` }}>
       <h1>Katschingistik</h1>
       {isMobile && (
         <div className="chart-resize-control">
@@ -260,11 +267,7 @@ const Statistics = () => {
                 name={player.playerName}
                 stroke={colors[index % colors.length]}
                 strokeOpacity={hiddenPlayers.has(player.playerName) ? 0.2 : 1}
-                activeDot={{
-                  onMouseEnter: (e, payload) => handleDotMouseEnter(payload, player.playerName, colors[index % colors.length]),
-                  onMouseLeave: handleMouseLeave,
-                  r: 8
-                }}
+                hide={hiddenPlayers.has(player.playerName)}
                 dot={false}
               />
             ))}
