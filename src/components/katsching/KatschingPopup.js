@@ -7,6 +7,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
     const [comment, setComment] = useState('');
     const [isAnimating, setIsAnimating] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     const popupRef = useRef(null);
     const commentRef = useRef(null);
@@ -78,8 +79,15 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                 await addKatschings(updatedPlayer, newHistoryEntry);
                 console.log("Katsching added successfully");
                 setComment('');
-                closePopup();
-                refreshHistory(); // Call the refreshHistory function after adding a Katsching
+                setShowSuccess(true);
+                // Increase the timeout to give users more time to see the message
+                setTimeout(() => {
+                    setShowSuccess(false);
+                    closePopup();
+                }, 2000); // Increased from 1500 to 2000 ms
+                if (typeof refreshHistory === 'function') {
+                    refreshHistory();
+                }
             } catch (error) {
                 console.error("Error adding Katsching:", error);
                 alert("Failed to add Katsching. Please try again.");
@@ -105,6 +113,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                         onChange={(e) => setComment(e.target.value)} 
                     />
                     <div className="popup-add-button" onClick={handleAddKatsching}>Katsching hinzufügen</div>
+                    {showSuccess && <div className="success-message">Katsching erfolgreich hinzugefügt!</div>}
                 </div>
             </div>
         </div>

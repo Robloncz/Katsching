@@ -1,30 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataStore } from 'aws-amplify/datastore';
 import { HistoryEntry } from '../../models';
 import './HistoryTable.css';
 
-const HistoryTable = ({ isAdmin, refreshTrigger }) => {
-  const [history, setHistory] = useState([]);
-
-  const sortHistoryByTime = (history) => {
-    return [...history].sort((a, b) => new Date(b.time) - new Date(a.time));
-  };
-
-  const fetchHistory = useCallback(async () => {
-    try {
-      const historyData = await DataStore.query(HistoryEntry);
-      setHistory(sortHistoryByTime(historyData));
-    } catch (err) {
-      console.error('Error fetching history:', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory, refreshTrigger]);
-
+const HistoryTable = ({ isAdmin, historyEntries }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-GB', {
@@ -39,7 +20,8 @@ const HistoryTable = ({ isAdmin, refreshTrigger }) => {
   const deleteHistoryEntry = async (entryId) => {
     try {
       await DataStore.delete(HistoryEntry, entryId);
-      setHistory(history.filter(entry => entry.id !== entryId));
+      // After deleting, you might want to refresh the history
+      // This could be done by passing a refreshHistory function from AppContent
     } catch (err) {
       console.error("Error deleting history entry:", err);
     }
@@ -57,7 +39,7 @@ const HistoryTable = ({ isAdmin, refreshTrigger }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {history.map((entry, index) => (
+          {historyEntries.map((entry, index) => (
             <TableRow key={index}>
               <TableCell>{formatDate(entry.time)}</TableCell>
               <TableCell>{entry.event}</TableCell>

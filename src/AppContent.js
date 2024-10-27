@@ -38,6 +38,7 @@ function AppContent() {
   const [showCopyNotification, setShowCopyNotification] = useState(false);
   const [numHistoryEntries, setNumHistoryEntries] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [historyEntries, setHistoryEntries] = useState([]);
 
   const sortPlayersByKatschings = useCallback((players) => {
     return [...players].sort((a, b) => b.katschings - a.katschings);
@@ -226,6 +227,26 @@ function AppContent() {
     }
   };
 
+  const fetchHistoryEntries = useCallback(async () => {
+    try {
+      const entries = await DataStore.query(HistoryEntry, null, {
+        sort: s => s.time("DESCENDING"),
+        limit: 100 // Adjust this number as needed
+      });
+      setHistoryEntries(entries);
+    } catch (err) {
+      console.error("Error fetching history entries:", err);
+    }
+  }, []);
+
+  const refreshHistory = useCallback(() => {
+    fetchHistoryEntries();
+  }, [fetchHistoryEntries]);
+
+  useEffect(() => {
+    fetchHistoryEntries();
+  }, [fetchHistoryEntries]);
+
   return (
     <View className="App">
       <div className="menu-container">
@@ -296,7 +317,7 @@ function AppContent() {
                 </div>
               </Card>
               <Card className="history-table-container">
-                <HistoryTable isAdmin={isAdmin} />
+                <HistoryTable isAdmin={isAdmin} historyEntries={historyEntries} />
               </Card>
               {user && (
                 <>
@@ -307,6 +328,7 @@ function AppContent() {
                       togglePopup={toggleKatschingPopup}
                       addKatschings={addKatschings}
                       selectedPlayer={selectedPlayer}
+                      refreshHistory={refreshHistory}
                     />
                   )}
                 </>

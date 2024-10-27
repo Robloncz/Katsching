@@ -1,0 +1,23 @@
+type Player @model
+  @auth(rules: [
+    { allow: public }
+  ]) {
+  id: ID!
+  name: String!
+  emoji: String
+  katschings: Int!
+  lastKatsching: AWSDateTime!
+  history: [HistoryEntry] @hasMany(indexName: "byPlayer", fields: ["id"])
+}
+
+type HistoryEntry @model
+  @auth(rules: [
+    { allow: public}
+  ]) {
+  id: ID!
+  playerId: ID! @index(name: "byPlayer", sortKeyFields: ["time"])
+  time: AWSDateTime!
+  event: String!
+  comments: String
+}
+
