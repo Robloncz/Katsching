@@ -39,6 +39,7 @@ function AppContent() {
   const [numHistoryEntries, setNumHistoryEntries] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [historyEntries, setHistoryEntries] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const sortPlayersByKatschings = useCallback((players) => {
     return [...players].sort((a, b) => b.katschings - a.katschings);
@@ -69,16 +70,23 @@ function AppContent() {
     initializeApp();
   }, [fetchAllData]);
 
-  const checkAdmin = async () => {
+  const checkAdmin = useCallback(async () => {
     try {
-      const currentUser = await getCurrentUser();
-      if (currentUser && currentUser.username === 'rene271') {
+      if (user && user.username === 'rene271') {
         setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
     } catch (err) {
       console.error("Error checking admin status:", err);
+      setIsAdmin(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    setIsAuthenticated(!!user);
+    checkAdmin();
+  }, [user]);
 
   useEffect(() => {
     const syncInterval = setInterval(async () => {
@@ -285,10 +293,10 @@ function AppContent() {
                     isAdmin={isAdmin}
                     toggleKatschingPopup={toggleKatschingPopup}
                     editKatschingScore={editKatschingScore}
-                    isLoggedIn={!!user}
+                    isLoggedIn={isAuthenticated}
                   />
                   <div className="add-player-button-container">
-                    {isAdmin && user && (
+                    {isAdmin && isAuthenticated && (
                       <Button className="add-player-button" onClick={togglePopup}>Neuen Wicht hinzufügen</Button>
                     )}
                     <div className="copy-container">
@@ -319,7 +327,7 @@ function AppContent() {
               <Card className="history-table-container">
                 <HistoryTable isAdmin={isAdmin} historyEntries={historyEntries} />
               </Card>
-              {user && (
+              {isAuthenticated && (
                 <>
                   <Popup isVisible={isPopupVisible} togglePopup={togglePopup} addPlayer={addPlayer} />
                   {selectedPlayer && (
