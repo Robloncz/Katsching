@@ -133,19 +133,6 @@ function AppContent() {
     checkAuthAndAdmin();
   }, [checkAdmin, user]);
 
-  useEffect(() => {
-    const syncInterval = setInterval(async () => {
-      try {
-        await DataStore.sync();
-        console.log("DataStore synced successfully");
-      } catch (error) {
-        console.error("Error syncing DataStore:", error);
-      }
-    }, 60000); // Sync every minute
-
-    return () => clearInterval(syncInterval);
-  }, []);
-
   const togglePopup = useCallback(() => {
     setIsPopupVisible(prev => !prev);
   }, []);
@@ -217,7 +204,8 @@ function AppContent() {
   };
 
   const copyToClipboard = async () => {
-    const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
+    // Format players with their emojis
+    const playersText = players.map(player => `${player.name} ${player.emoji}: ${player.katschings}`).join('\n');
     
     try {
       const historyEntries = await DataStore.query(HistoryEntry, null, {
@@ -241,7 +229,8 @@ function AppContent() {
 
   const shareOnWhatsApp = async () => {
     try {
-      const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
+      // Format players with their emojis
+      const playersText = players.map(player => `${player.name} ${player.emoji}: ${player.katschings}`).join('\n');
   
       const historyEntries = await DataStore.query(HistoryEntry, null, {
         sort: s => s.time("DESCENDING"),
