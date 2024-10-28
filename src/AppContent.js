@@ -204,69 +204,57 @@ function AppContent() {
   };
 
   const copyToClipboard = async () => {
-    // Format players with their emojis
-    const playersText = players.map(player => `${player.name} ${player.emoji}: ${player.katschings}`).join('\n');
+    const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
     
     try {
-        const historyEntries = await DataStore.query(HistoryEntry, null, {
-            sort: s => s.time("DESCENDING"),
-            limit: numHistoryEntries
-        });
-        
-        const historyText = historyEntries.map(entry => 
-            `${new Date(entry.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${entry.event} - Kommentar: *${entry.comments}*`
-        ).join('\n');
-        
-        // Customize history header based on number of entries
-        const historyHeader = numHistoryEntries === 1 
-            ? "Letzter Eintrag:"
-            : `Letzte ${numHistoryEntries} Einträge:`;
-        
-        const clipboardText = `${playersText}\n\n${historyHeader}\n${historyText}`;
-        
-        await navigator.clipboard.writeText(clipboardText);
-        setShowCopyNotification(true);
-        setTimeout(() => setShowCopyNotification(false), 1500);
+      const historyEntries = await DataStore.query(HistoryEntry, null, {
+        sort: s => s.time("DESCENDING"),
+        limit: numHistoryEntries
+      });
+      
+      const historyText = historyEntries.map(entry => 
+        `${new Date(entry.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${entry.event} - Kommentar: *${entry.comments}*`
+      ).join('\n');
+      
+      const clipboardText = `${playersText}\n\nRecent History:\n${historyText}`;
+      
+      await navigator.clipboard.writeText(clipboardText);
+      setShowCopyNotification(true);
+      setTimeout(() => setShowCopyNotification(false), 1500);
     } catch (err) {
-        console.error("Failed to copy data to clipboard:", err);
+      console.error("Failed to copy data to clipboard:", err);
     }
-};
+  };
 
   const shareOnWhatsApp = async () => {
     try {
-        // Format players with their emojis
-        const playersText = players.map(player => `${player.name} ${player.emoji}: ${player.katschings}`).join('\n');
-
-        const historyEntries = await DataStore.query(HistoryEntry, null, {
-            sort: s => s.time("DESCENDING"),
-            limit: numHistoryEntries
-        });
-
-        const historyText = historyEntries.map(entry => 
-            `${new Date(entry.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${entry.event} - Kommentar: *${entry.comments}*`
-        ).join('\n');
-
-        // Customize history header based on number of entries
-        const historyHeader = numHistoryEntries === 1 
-            ? "Letzter Eintrag:"
-            : `Letzte ${numHistoryEntries} Einträge:`;
-
-        const message = `${playersText}\n\n${historyHeader}\n${historyText}`;
-
-        if (navigator.share) {
-            await navigator.share({ text: message });
-        } else if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(message);
-            alert('Message copied to clipboard. Please paste it into WhatsApp.');
-        } else {
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
-        }
+      const playersText = players.map(player => `${player.name}: ${player.katschings}`).join('\n');
+  
+      const historyEntries = await DataStore.query(HistoryEntry, null, {
+        sort: s => s.time("DESCENDING"),
+        limit: numHistoryEntries
+      });
+  
+      const historyText = historyEntries.map(entry => 
+        `${new Date(entry.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}: ${entry.event} - Kommentar: *${entry.comments}*`
+      ).join('\n');
+  
+      const message = `${playersText}\n\nRecent History:\n${historyText}`;
+  
+      if (navigator.share) {
+        await navigator.share({ text: message });
+      } else if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(message);
+        alert('Message copied to clipboard. Please paste it into WhatsApp.');
+      } else {
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+      }
     } catch (err) {
-        console.error("Error sharing on WhatsApp:", err);
+      console.error("Error sharing on WhatsApp:", err);
     }
-};
+  };
 
   const getHeaderImage = () => {
     switch (location.pathname) {
