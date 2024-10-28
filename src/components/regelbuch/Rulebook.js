@@ -20,7 +20,7 @@ Das war mit der Geburt Katschings dann aber eh gegessen. Mal schauen wann wir da
         clearInterval(timer);
         return prevText;
       });
-    }, 100); // Adjust this value to change typing speed
+    }, 50); // Adjust this value to change typing speed
 
     return () => clearInterval(timer);
   }, []);

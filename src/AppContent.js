@@ -21,9 +21,11 @@ import { Player, HistoryEntry } from './models';
 import { getCurrentUser } from 'aws-amplify/auth';
 import KatschingTable from './components/katsching/KatschingTable';
 import { ReactComponent as WhatsAppIcon } from './WhatsApp.svg';
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaMoon, FaSun } from 'react-icons/fa';
 import Statistics from './components/statistiken/statistics';
 import Rulebook from './components/regelbuch/Rulebook';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function AppContent() {
   const { user, signOut } = useAuthenticator((context) => [context.user]);
@@ -40,6 +42,11 @@ function AppContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [historyEntries, setHistoryEntries] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminModeEnabled, setAdminModeEnabled] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme === 'dark';
+  });
 
   const sortPlayersByKatschings = useCallback((players) => {
     return [...players].sort((a, b) => b.katschings - a.katschings);
@@ -72,7 +79,22 @@ function AppContent() {
 
   const checkAdmin = useCallback(async () => {
     try {
-      if (user && user.username === 'rene271') {
+      const currentUser = await getCurrentUser();
+      const adminUsers = [
+        'rene2701',
+        'berni_o_aus_e_',
+        'grasphil',
+        'tobi',
+        'david',
+        'mattied69',
+        'till',
+        'yannick',
+        'rene271',
+        'rr',
+        "luca"
+      ];
+
+      if (currentUser && adminUsers.includes(currentUser.username)) {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
@@ -81,12 +103,35 @@ function AppContent() {
       console.error("Error checking admin status:", err);
       setIsAdmin(false);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
-    setIsAuthenticated(!!user);
-    checkAdmin();
-  }, [user]);
+    const checkAuthAndAdmin = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        const isUserAuthenticated = !!currentUser;
+        setIsAuthenticated(isUserAuthenticated);
+        
+        if (isUserAuthenticated) {
+          await checkAdmin();
+        } else {
+          setIsAdmin(false);
+          setIsPopupVisible(false);
+          setIsKatschingPopupVisible(false);
+          setSelectedPlayer(null);
+        }
+      } catch (err) {
+        console.error("Error checking authentication:", err);
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+        setIsPopupVisible(false);
+        setIsKatschingPopupVisible(false);
+        setSelectedPlayer(null);
+      }
+    };
+
+    checkAuthAndAdmin();
+  }, [checkAdmin, user]);
 
   useEffect(() => {
     const syncInterval = setInterval(async () => {
@@ -255,8 +300,28 @@ function AppContent() {
     fetchHistoryEntries();
   }, [fetchHistoryEntries]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   return (
     <View className="App">
+      <button
+        className="dark-mode-toggle"
+        onClick={toggleDarkMode}
+        aria-label="Toggle dark mode"
+      >
+        {isDarkMode ? (
+          <FaSun className="dark-mode-icon" />
+        ) : (
+          <FaMoon className="dark-mode-icon" />
+        )}
+      </button>
       <div className="menu-container">
         <FaBars className="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)} />
         {isMenuOpen && (
@@ -290,46 +355,62 @@ function AppContent() {
                 <div className="table-container">
                   <KatschingTable 
                     players={players}
-                    isAdmin={isAdmin}
+                    isAdmin={isAdmin && adminModeEnabled}
                     toggleKatschingPopup={toggleKatschingPopup}
                     editKatschingScore={editKatschingScore}
                     isLoggedIn={isAuthenticated}
                   />
                   <div className="add-player-button-container">
-                    {isAdmin && isAuthenticated && (
-                      <Button className="add-player-button" onClick={togglePopup}>Neuen Wicht hinzufügen</Button>
-                    )}
-                    <div className="copy-container">
-                      <Button className="copy-to-clipboard-button" onClick={copyToClipboard}>In Zwischenablage</Button>
-                      <Button className="whatsapp-button" onClick={shareOnWhatsApp}>
-                        <WhatsAppIcon className="whatsapp-icon" />
+                    {isAdmin && isAuthenticated && adminModeEnabled && (
+                      <Button className="add-player-button" onClick={togglePopup}>
+                        Spieler hinzufügen
                       </Button>
-                      {showCopyNotification && (
-                        <div className="copy-notification">
-                          In Zwischenablage kopiert!
-                        </div>
-                      )}
-                    </div>
-                    <div className="history-selection-container">
-                      <label htmlFor="numEntries">Einträge:</label>
-                      <input
-                        type="number"
-                        id="numEntries"
-                        value={numHistoryEntries}
-                        onChange={handleNumEntriesChange}
-                        min="1"
-                        max="100"
-                      />
-                    </div>
+                    )}
+                    {isAuthenticated && (
+                      <div className="copy-container">
+                        <Button className="copy-to-clipboard-button" onClick={copyToClipboard}>
+                          In Zwischenablage
+                        </Button>
+                        <Button className="whatsapp-button" onClick={shareOnWhatsApp}>
+                          <WhatsAppIcon className="whatsapp-icon" />
+                        </Button>
+                        {showCopyNotification && (
+                          <div className="copy-notification">
+                            In Zwischenablage kopiert!
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {isAuthenticated && (
+                      <div className="history-selection-container">
+                        <label htmlFor="numEntries">Einträge:</label>
+                        <input
+                          type="number"
+                          id="numEntries"
+                          value={numHistoryEntries}
+                          onChange={handleNumEntriesChange}
+                          min="1"
+                          max="100"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>
               <Card className="history-table-container">
-                <HistoryTable isAdmin={isAdmin} historyEntries={historyEntries} />
+                <HistoryTable 
+                  isAdmin={isAdmin && adminModeEnabled}
+                  historyEntries={historyEntries}
+                  setHistoryEntries={setHistoryEntries} // Add this line
+                />
               </Card>
               {isAuthenticated && (
                 <>
-                  <Popup isVisible={isPopupVisible} togglePopup={togglePopup} addPlayer={addPlayer} />
+                  <Popup 
+                    isVisible={isPopupVisible} 
+                    togglePopup={togglePopup} 
+                    addPlayer={addPlayer} 
+                  />
                   {selectedPlayer && (
                     <KatschingPopup
                       isVisible={isKatschingPopupVisible}
@@ -358,6 +439,19 @@ function AppContent() {
           </Authenticator>
         } />
       </Routes>
+      {isAdmin && (
+        <FormControlLabel
+          control={
+            <Switch
+              checked={adminModeEnabled}
+              onChange={(e) => setAdminModeEnabled(e.target.checked)}
+              color="primary"
+            />
+          }
+          label="Admin Mode"
+          className="admin-toggle"
+        />
+      )}
     </View>
   );
 }

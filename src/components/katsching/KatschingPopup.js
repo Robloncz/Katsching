@@ -2,15 +2,30 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './KatschingPopup.css';
 import { Player, HistoryEntry } from '../../models';
 import { DataStore } from 'aws-amplify/datastore';
+import { getCurrentUser } from 'aws-amplify/auth';
 
 const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer, refreshHistory }) => {
     const [comment, setComment] = useState('');
     const [isAnimating, setIsAnimating] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
 
     const popupRef = useRef(null);
     const commentRef = useRef(null);
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const user = await getCurrentUser();
+                setCurrentUser(user);
+            } catch (err) {
+                console.error("Error fetching current user:", err);
+            }
+        };
+        fetchCurrentUser();
+    }, []);
 
     const closePopup = useCallback(() => {
         setIsClosing(true);
@@ -54,9 +69,8 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
     }, [isVisible]);
 
     const handleAddKatsching = async () => {
-        if (selectedPlayer) {
+        if (selectedPlayer && currentUser) {
             try {
-                console.log("Adding Katsching for player:", selectedPlayer);
                 const currentSelectedPlayer = await DataStore.query(Player, selectedPlayer.id);
 
                 if (!currentSelectedPlayer) {
@@ -71,20 +85,22 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                 const newHistoryEntry = new HistoryEntry({
                     playerId: updatedPlayer.id,
                     time: new Date().toISOString(),
-                    event: `1 Katsching für ${updatedPlayer.name}`,
+                    // Update the event text to include who gave the katsching
+                    event: `${currentUser.username} gab 1 Katsching an ${updatedPlayer.name}`,
                     comments: comment,
                 });
 
-                console.log("Calling addKatschings with:", updatedPlayer, newHistoryEntry);
                 await addKatschings(updatedPlayer, newHistoryEntry);
-                console.log("Katsching added successfully");
                 setComment('');
+                
+                setSuccessMessage(`${currentUser.username} hat ${selectedPlayer.name} einen Katsching gegeben!`);
                 setShowSuccess(true);
-                // Increase the timeout to give users more time to see the message
+                
                 setTimeout(() => {
                     setShowSuccess(false);
                     closePopup();
-                }, 2000); // Increased from 1500 to 2000 ms
+                }, 2000);
+                
                 if (typeof refreshHistory === 'function') {
                     refreshHistory();
                 }
@@ -93,8 +109,8 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                 alert("Failed to add Katsching. Please try again.");
             }
         } else {
-            console.error("No player selected");
-            alert("No player selected. Please try again.");
+            console.error("No player selected or user not logged in");
+            alert("No player selected or not logged in. Please try again.");
         }
     };
 
@@ -113,7 +129,7 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                         onChange={(e) => setComment(e.target.value)} 
                     />
                     <div className="popup-add-button" onClick={handleAddKatsching}>Katsching hinzufügen</div>
-                    {showSuccess && <div className="success-message">Katsching erfolgreich hinzugefügt!</div>}
+                    {showSuccess && <div className="success-message">{successMessage}</div>}
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import { DataStore } from 'aws-amplify/datastore';
 import { HistoryEntry } from '../../models';
 import './HistoryTable.css';
 
-const HistoryTable = ({ isAdmin, historyEntries }) => {
+const HistoryTable = ({ isAdmin, historyEntries, setHistoryEntries }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-GB', {
@@ -14,14 +14,14 @@ const HistoryTable = ({ isAdmin, historyEntries }) => {
       day: '2-digit',
       month: '2-digit',
       year: '2-digit',
-    });
+    }).replace(',', '');  // Remove comma between date and time
   };
 
   const deleteHistoryEntry = async (entryId) => {
     try {
       await DataStore.delete(HistoryEntry, entryId);
-      // After deleting, you might want to refresh the history
-      // This could be done by passing a refreshHistory function from AppContent
+      // Update the UI immediately by filtering out the deleted entry
+      setHistoryEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
     } catch (err) {
       console.error("Error deleting history entry:", err);
     }
@@ -32,20 +32,26 @@ const HistoryTable = ({ isAdmin, historyEntries }) => {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Uhrzeit</TableCell>
-            <TableCell>Event</TableCell>
-            <TableCell>Kommentar</TableCell>
-            {isAdmin && <TableCell>Aktionen</TableCell>}
+            <TableCell className="time-cell">Uhrzeit</TableCell>
+            <TableCell className="event-cell">Event</TableCell>
+            <TableCell className="comment-cell">Kommentar</TableCell>
+            {isAdmin && <TableCell className="actions-cell"></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {historyEntries.map((entry, index) => (
             <TableRow key={index}>
-              <TableCell>{formatDate(entry.time)}</TableCell>
-              <TableCell>{entry.event}</TableCell>
-              <TableCell>{entry.comments}</TableCell>
+              <TableCell className="time-cell">
+                <div className="time-wrapper">{formatDate(entry.time)}</div>
+              </TableCell>
+              <TableCell className="event-cell">
+                <div className="text-wrapper">{entry.event}</div>
+              </TableCell>
+              <TableCell className="comment-cell">
+                <div className="text-wrapper">{entry.comments}</div>
+              </TableCell>
               {isAdmin && (
-                <TableCell>
+                <TableCell className="actions-cell">
                   <IconButton onClick={() => deleteHistoryEntry(entry.id)} className="delete-button">
                     <DeleteIcon />
                   </IconButton>

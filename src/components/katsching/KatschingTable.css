@@ -1,8 +1,30 @@
+/* Add dark mode variables */
+:root {
+  --table-bg: #dcdee0;
+  --cell-bg: #EFF0F0;
+  --text-color: #0d1a26;
+  --button-bg: #EFF0F0;
+  --paper-bg: #ffffff;
+}
+
+[data-theme='dark'] {
+  --table-bg: #2c3e50;
+  --cell-bg: #34495e;
+  --text-color: #ecf0f1;
+  --button-bg: #445566;
+  --paper-bg: #1a1a1a;
+}
+
+/* Update Paper component background */
+.MuiPaper-root {
+  background-color: var(--paper-bg) !important;
+}
+
 .table-container {
   width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
-  background: #dcdee0 !important;
+  background: var(--table-bg) !important;
   border-radius: 10px !important;
   overflow: hidden !important;
 }
@@ -18,18 +40,14 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  background: #dcdee0 !important;
+  background: var(--table-bg) !important;
   height: 18px !important;
   padding: 0 15px !important;
   white-space: nowrap !important;
 }
 
-.table-header-cell:last-child {
-  width: 0 !important;
-}
-
 .table-header-text {
-  color: #0d1a26 !important;
+  color: var(--text-color) !important;
   font-size: 16px !important;
   font-family: 'Montserrat' !important;
   font-weight: 1000 !important;
@@ -37,6 +55,70 @@
   line-height: 18px !important;
   word-wrap: break-word !important;
   text-align: center !important;
+}
+
+/* Update table cells */
+.MuiTableCell-root {
+  background-color: var(--cell-bg) !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid var(--table-bg) !important;
+}
+
+/* Update table header cells */
+.MuiTableCell-head {
+  background-color: var(--table-bg) !important;
+  color: var(--text-color) !important;
+  font-weight: bold !important;
+}
+
+/* Update add katsching button */
+.add-katsching-button {
+  background: var(--button-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.katsching-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100% !important;
+  color: var(--text-color) !important;
+}
+
+.katsching-counter {
+  margin-right: 4px !important;
+  text-align: right !important;
+  min-width: 20px !important;
+  display: inline-block !important;
+}
+
+.add-katsching-button {
+  background: var(--button-bg) !important;
+  border-radius: 30% !important;
+  min-width: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  margin-left: 4px !important;
+  color: var(--text-color) !important;
+}
+
+/* Update icons color */
+.MuiSvgIcon-root {
+  color: var(--text-color) !important;
+}
+
+/* Add transition for smooth theme switching */
+.MuiTableCell-root,
+.MuiTableCell-head,
+.add-katsching-button,
+.MuiSvgIcon-root {
+  transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
 .table-row {
@@ -50,10 +132,10 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  background: #dcdee0 !important;
+  background: var(--table-bg) !important;
   padding: 0 15px !important;
   font-family: 'Montserrat', sans-serif !important;
-  color: #0d1a26 !important;
+  color: var(--text-color) !important;
   font-size: 16px !important;
   font-weight: 400 !important;
   line-height: 18px !important;
@@ -61,6 +143,7 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   text-align: center !important;
+  min-width: 0 !important;
 }
 
 .table-header-cell,
@@ -69,29 +152,11 @@
   text-align: center !important;
 }
 
-.katsching-container {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 10px !important;
-}
-
 .katsching-counter {
+  margin-right: 4px !important;
   text-align: right !important;
-  width: 10px !important;
-}
-
-.add-katsching-button {
-  background: #EFF0F0 !important;
-  border-radius: 30% !important;
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  cursor: pointer !important;
-  margin-left: 0 !important;
+  min-width: 20px !important;
+  display: inline-block !important;
 }
 
 @media (max-width: 768px) {
@@ -99,29 +164,39 @@
     font-size: 12px !important;
     padding: 6px !important;
   }
+  
+  .table-cell {
+    padding: 0 8px !important;
+    font-size: 14px !important;
+  }
+  
+  .actions-cell {
+    min-width: 40px !important;
+  }
 }
 
 .MuiTableContainer-root {
   width: 100% !important;
   height: 100% !important;
-  overflow: auto !important;
+  overflow-x: hidden !important;
 }
 
 .MuiTable-root {
   width: 100% !important;
-  height: 100% !important;
+  min-width: unset !important;
   table-layout: fixed !important;
 }
 
 .MuiTableCell-root {
+  padding: 8px !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  white-space: normal !important;
+  white-space: nowrap !important;
 }
 
 .MuiTableCell-head {
   font-family: 'Montserrat', cursive !important;
-  background-color: #dcdee0 !important;
+  background-color: var(--table-bg) !important;
 }
 
 .MuiTableCell-body {
@@ -129,26 +204,33 @@
 }
 
 .player-name-cell {
-  width: 25% !important;
+  flex: 2 !important;
+  justify-content: flex-start !important;
+  width: 30% !important;
 }
 
 .last-katsching-cell {
-  width: 40% !important;
+  flex: 2 !important;
+  width: 35% !important;
 }
 
 .katschings-cell {
+  flex: 1 !important;
   width: 25% !important;
 }
 
 .actions-cell {
+  flex: 0.5 !important;
+  min-width: 60px !important;
   width: 10% !important;
+  padding: 0 4px !important;
 }
 
 .MuiTableHead-root {
   position: sticky !important;
   top: 0 !important;
   z-index: 1 !important;
-  background-color: #dcdee0 !important;
+  background-color: var(--table-bg) !important;
 }
 
 .funny-button {

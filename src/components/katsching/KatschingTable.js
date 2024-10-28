@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import './KatschingTable.css';
 
 const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingScore, isLoggedIn }) => {
@@ -20,36 +21,40 @@ const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingS
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Spieler</TableCell>
+            <TableCell className="player-name-cell">Spieler</TableCell>
             <TableCell className="last-katsching-cell">Letzter Katsching</TableCell>
-            <TableCell>Katschings</TableCell>
-            {isAdmin && <TableCell className="actions-cell">Aktionen</TableCell>}
+            <TableCell className="katschings-cell">Katschings</TableCell>
+            {isAdmin && isLoggedIn && <TableCell className="actions-cell"></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {players.map((player, index) => (
             <TableRow key={index}>
               <TableCell className="player-name-cell">{player.name}</TableCell>
-              <TableCell>
+              <TableCell className="last-katsching-cell">
                 {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
               </TableCell>
-              <TableCell>
+              <TableCell className="katschings-cell">
                 <div className="katsching-container">
-                  <div className="katsching-counter">{player.katschings}</div>
+                  <span className="katsching-counter">{player.katschings}</span>
                   {isLoggedIn && (
                     <IconButton 
                       className="add-katsching-button funny-button" 
                       onClick={() => toggleKatschingPopup(player)}
+                      size="small"
                     >
                       <AddIcon fontSize="small" />
                     </IconButton>
                   )}
                 </div>
               </TableCell>
-              {isAdmin && (
-                <TableCell>
-                  <IconButton onClick={() => editKatschingScore(player.id, prompt("New Katsching Score:", player.katschings))}>
-                    Edit
+              {isAdmin && isLoggedIn && (
+                <TableCell className="actions-cell">
+                  <IconButton 
+                    onClick={() => editKatschingScore(player.id, prompt("New Katsching Score:", player.katschings))}
+                    size="small"
+                  >
+                    <EditIcon fontSize="small" />
                   </IconButton>
                 </TableCell>
               )}

@@ -11,6 +11,15 @@
     --line-height-main: 1.5;
     --box-shadow: 6px 5px 3px rgba(0, 0, 0, 0.25);
     --input-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    --success-color: #1EAB35;
+}
+
+[data-theme='dark'] {
+    --primary-bg: #2c3e50;
+    --secondary-bg: #34495e;
+    --overlay-bg: rgba(0, 0, 0, 0.7);
+    --text-color: #ecf0f1;
+    --success-color: #2ecc71;
 }
 
 .popup-overlay {
@@ -62,6 +71,7 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    background: var(--primary-bg);
 }
 
 .popup-subtitle {
@@ -136,6 +146,7 @@
     resize: vertical;
     overflow-y: auto;
     transition: box-shadow 0.3s ease;
+    color: var(--text-color);
 }
 
 .popup-comment:focus {
@@ -177,7 +188,7 @@
 }
 
 .success-message {
-    color: green;
+    color: var(--success-color);
     margin-top: 10px;
     font-weight: bold;
 }

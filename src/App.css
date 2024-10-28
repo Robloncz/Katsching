@@ -2,12 +2,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 :root {
-  --primary-color: #DCDEE0 !important;
-  --secondary-color: #89949F !important; /* Change this to your desired color */
-  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color)) !important;
+  --primary-color: #DCDEE0;
+  --secondary-color: #89949F;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #0d1a26;
+  --background-color: #ffffff;
+  --table-bg: #dcdee0;
+  --cell-bg: #EFF0F0;
+  --button-bg: #EFF0F0;
+  --button-text: #0d1a26;
+  --border-color: #ccc;
+  --popup-bg: #BCECF5;
+  --popup-input-bg: #EFF0F0;
+  --popup-text: #304050;
+  --success-color: #1EAB35;
+  --delete-button: #ff4d4f;
+  --delete-button-hover: #ff7875;
 }
+
+[data-theme='dark'] {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #ecf0f1;
+  --background-color: #1a1a1a;
+  --table-bg: #2c3e50;
+  --cell-bg: #34495e;
+  --button-bg: #445566;
+  --button-text: #ecf0f1;
+  --border-color: #4a4a4a;
+  --popup-bg: #2c3e50;
+  --popup-input-bg: #34495e;
+  --popup-text: #ecf0f1;
+  --success-color: #2ecc71;
+  --delete-button: #e74c3c;
+  --delete-button-hover: #c0392b;
+}
+
 body {
   background-image: var(--gradient-top-bottom) !important;
+  color: var(--text-color) !important;
 }
 
 
@@ -31,6 +65,9 @@ body {
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
+  position: relative !important; /* Add this to contain absolute positioned elements */
+  width: 100% !important; /* Ensure full width */
+  min-height: 100vh !important; /* Ensure full height */
 }
 
 .App-logo {
@@ -60,7 +97,7 @@ body {
   width: 95vw !important;
   height: 50hw !important;
   padding: 11px 20px !important;
-  background: #dcdee0 !important;
+  background: var(--table-bg) !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
@@ -81,10 +118,11 @@ body {
   display: flex !important;
   justify-content: center !important; /* Center the contents */
   align-items: center !important; /* Center the contents */
-  background: #dcdee0 !important;
+  background: var(--cell-bg) !important;
   height: 18px !important;
   padding: 0 15px !important;
   white-space: nowrap !important; /* Prevent text from breaking into multiple lines */
+  color: var(--text-color) !important;
 }
 
 .table-header-cell:last-child {
@@ -93,7 +131,7 @@ body {
 
 .table-header-text {
   text-align: center !important;
-  color: #0d1a26 !important;
+  color: var(--text-color) !important;
   font-size: 16px !important;
   font-family: 'Irish Grover' !important;
   font-weight: 700 !important;
@@ -114,10 +152,10 @@ body {
   display: flex !important;
   justify-content: center !important; /* Center the contents */
   align-items: center !important; /* Center the contents */
-  background: #dcdee0 !important;
+  background: var(--cell-bg) !important;
   padding: 0 15px !important;
   font-family: 'Montserrat' !important;
-  color: #0d1a26 !important;
+  color: var(--text-color) !important;
   font-size: 16px !important;
   font-weight: 400 !important;
   line-height: 18px !important;
@@ -142,36 +180,46 @@ body {
   justify-content: center !important;
   margin-bottom: 10px !important;
   align-items: center !important;
+  gap: 10px !important; /* Add consistent spacing between elements */
+  flex-wrap: wrap !important; /* Allow wrapping on smaller screens */
+  padding: 0 10px !important;
 }
 
 .add-player-button {
-  padding: 10px 20px !important;
-  /* add distance */
+  height: 40px !important;
+  padding: 0 20px !important;
   margin-top: 20px !important;
+  background: var(--button-bg) !important;
   background: #EFF0F0 !important;
   border-radius: 23px !important;
   color: black !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-family: 'Montserrat' !important;
   font-weight: 500 !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .copy-to-clipboard-button {
-  padding: 10px 20px !important;
-  /* add distance */
+  height: 40px !important;
+  padding: 0 20px !important;
   margin-top: 20px !important;
-  margin-left: 5px !important;
   background: #EFF0F0 !important;
   border-radius: 23px !important;
   color: black !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-family: 'Montserrat' !important;
   font-weight: 500 !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
   justify-content: center !important;
-  z-index: 999 !important;
 }
+
 .update-button { 
   justify-content: center !important;
   border: none !important;
@@ -188,12 +236,12 @@ body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important; /* Adjust the gap as needed */
 }
 
 div.katsching-counter{
   align-items: left !important;
   width: 10px !important;
+  padding-right: 5px !important;
 }
 .add-katsching-button {
   background: #EFF0F0 !important;
@@ -216,14 +264,14 @@ div.katsching-counter{
   background: #dcdee0 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: space-between !important; /* Changed to space-between */
   align-items: flex-start !important;
   gap: 1px !important;
-  border-radius: 10px !important; /* Add round edges */
-  margin-top: 20px !important; /* Add some space above the history table */
+  border-radius: 10px !important;
+  margin-top: 20px !important;
   z-index: 1 !important;
-  overflow: hidden !important; /* Ensure the container does not expand */
-  max-height: 300px !important; /* Set a maximum height */
+  overflow: hidden !important;
+  max-height: 300px !important;
 }
 
 .history-table-header {
@@ -306,8 +354,10 @@ div.katsching-counter{
 }
 
 .copy-container {
-  position: relative;
-  z-index: 999;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  position: relative !important;
 }
 
 .copy-notification {
@@ -371,20 +421,17 @@ div.katsching-counter{
 }
 
 .whatsapp-button {
-  padding: 10px !important;
+  height: 40px !important;
+  width: 40px !important;
+  padding: 8px !important;
   margin-top: 20px !important;
-  margin-left: 5px !important;
-  background: #25D366 !important; /* WhatsApp green color */
-  border-radius: 50% !important; /* Make it circular */
-  color: white !important;
-  cursor: pointer !important;
+  background: #25D366 !important;
+  border-radius: 50% !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  z-index: 999 !important;
+  cursor: pointer !important;
   border: none !important;
-  width: 40px !important; /* Set a fixed width */
-  height: 40px !important; /* Set a fixed height */
 }
 
 .whatsapp-icon {
@@ -407,84 +454,413 @@ div.katsching-counter{
 }
 
 .history-selection-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px; /* Add top margin to align with other elements */
-  margin-left: 5px; /* Add left margin to align with other buttons */
-
-  border-radius: 23px; /* Match the border radius of buttons */
-  padding: 5px 10px; /* Add padding for a consistent look */
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  color: #304050;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 40px !important;
+  padding: 0 10px !important;
+  margin-top: auto !important; /* Push to bottom */
+  align-self: center !important; /* Center horizontally */
 }
 
-#numEntries {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: #EFF0F0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  color: #304050;
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.3s ease;
-  margin-left: 5px;
-
+.history-selection-container input {
+  width: 60px !important;
+  height: 30px !important;
+  border-radius: 15px !important;
+  border: 1px solid #ccc !important;
+  text-align: center !important;
+  font-family: 'Montserrat' !important;
+  font-size: 14px !important;
 }
 
-#numEntries:hover {
-  border-color: #89949F;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .add-player-button-container {
+    padding: 0 5px !important;
+  }
+
+  .add-player-button,
+  .copy-to-clipboard-button {
+    font-size: 12px !important;
+    padding: 0 15px !important;
+    height: 36px !important;
+  }
+
+  .whatsapp-button {
+    height: 36px !important;
+    width: 36px !important;
+    padding: 6px !important;
+  }
+
+  .history-selection-container {
+    height: 36px !important;
+  }
+
+  .history-selection-container input {
+    width: 50px !important;
+    height: 26px !important;
+    font-size: 12px !important;
+  }
 }
 
-#numEntries:focus {
-  border-color: #304050;
-}
-
+/* Add these styles for the menu container and sandwich menu */
 .menu-container {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
+  position: absolute !important; /* Change from fixed to absolute */
+  top: 20px !important;
+  left: 20px !important;
+  z-index: 1000 !important;
 }
 
 .menu-icon {
-  font-size: 24px;
-  cursor: pointer;
-  color: #4a4b4d;
+  font-size: 24px !important;
+  cursor: pointer !important;
+  color: #4a4b4d !important;
 }
 
 .sandwich-menu {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid #dfe1e5;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.006);
-  display: flex;
-  flex-direction: column;
+  position: absolute !important;
+  top: 40px !important;
+  left: 0 !important;
+  background-color: white !important;
+  border: 1px solid #dfe1e5 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 150px !important;
+  padding: 8px 0 !important;
 }
 
-.sandwich-menu a {
-  padding: 10px 20px;
-  text-decoration: none;
-  color: #333;
+.sandwich-menu button {
+  background: none !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  text-align: left !important;
+  width: 100% !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
 }
 
-.sandwich-menu a:hover {
-  background-color: #f8f9fa;
+.sandwich-menu button:hover {
+  background-color: #f8f9fa !important;
 }
 
-.sign-out-link {
-
+/* Adjust App-header to account for menu */
+.App-header {
+  position: relative !important;
+  width: 100% !important;
+  padding-top: 20px !important;
+  padding-bottom: 0px !important;
 }
 
-.sign-out-link:hover {
-  background-color: #f8f9fa;
+.admin-toggle {
+  margin: 10px 0 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  color: #1a2634 !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+[data-theme='dark'] .admin-toggle {
+  color: #cb645f !important;
+}
+
+.admin-toggle .MuiSwitch-root {
+  margin-right: 8px !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+.admin-toggle .MuiSwitch-track {
+  background-color: #89949F !important;
+  transition: background-color 0.3s ease-in-out !important;
+}
+
+.admin-toggle .MuiSwitch-thumb {
+  background-color: #DCDEE0 !important;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+}
+
+.admin-toggle .Mui-checked + .MuiSwitch-track {
+  background-color: #1EAB35 !important;
+  opacity: 0.5 !important;
+  transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+}
+
+.admin-toggle .Mui-checked .MuiSwitch-thumb {
+  background-color: #1EAB35 !important;
+  transition: background-color 0.3s ease-in-out !important;
+}
+
+/* Add these dark mode styles */
+:root {
+  --primary-color: #DCDEE0;
+  --secondary-color: #89949F;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #0d1a26;
+  --background-color: #ffffff;
+}
+
+[data-theme='dark'] {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #ecf0f1;
+  --background-color: #1a1a1a;
+}
+
+/* Add dark mode toggle button styles */
+.dark-mode-toggle {
+  position: absolute !important; /* Change from fixed to absolute */
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 1000 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.dark-mode-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme='dark'] .dark-mode-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-mode-icon {
+  width: 24px !important;
+  height: 24px !important;
+  color: var(--text-color) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.dark-mode-toggle:hover .dark-mode-icon {
+  transform: rotate(360deg) !important;
+}
+
+/* Update existing styles to use CSS variables */
+body {
+  background-image: var(--gradient-top-bottom) !important;
+  color: var(--text-color) !important;
+}
+
+/* Add these to your existing styles */
+[data-theme='dark'] .App-title {
+  color: var(--text-color) !important;
+}
+
+[data-theme='dark'] .table-container,
+[data-theme='dark'] .history-table-container {
+  background: var(--primary-color) !important;
+}
+
+[data-theme='dark'] .MuiTableCell-root {
+  color: var(--text-color) !important;
+}
+
+/* Update component styles to use variables */
+.table-container, .history-table-container {
+  background: var(--table-bg) !important;
+}
+
+.table-cell, .table-header-cell, .history-table-cell {
+  background: var(--cell-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.add-player-button, .copy-to-clipboard-button {
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+}
+
+.add-katsching-button {
+  background: var(--button-bg) !important;
+}
+
+.sandwich-menu {
+  background-color: var(--cell-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.sandwich-menu button {
+  color: var(--text-color) !important;
+}
+
+.menu-icon {
+  color: var(--text-color) !important;
+}
+
+/* Add transition for smooth color changes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Update the root variables with dark mode alternatives */
+:root {
+  --primary-color: #DCDEE0;
+  --secondary-color: #89949F;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #0d1a26;
+  --background-color: #ffffff;
+  --table-bg: #dcdee0;
+  --cell-bg: #EFF0F0;
+  --button-bg: #EFF0F0;
+  --button-text: #0d1a26;
+  --border-color: #ccc;
+  --popup-bg: #BCECF5;
+  --popup-input-bg: #EFF0F0;
+  --popup-text: #304050;
+  --success-color: #1EAB35;
+  --delete-button: #ff4d4f;
+  --delete-button-hover: #ff7875;
+}
+
+[data-theme='dark'] {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --gradient-top-bottom: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --text-color: #ecf0f1;
+  --background-color: #1a1a1a;
+  --table-bg: #2c3e50;
+  --cell-bg: #34495e;
+  --button-bg: #445566;
+  --button-text: #ecf0f1;
+  --border-color: #4a4a4a;
+  --popup-bg: #2c3e50;
+  --popup-input-bg: #34495e;
+  --popup-text: #ecf0f1;
+  --success-color: #2ecc71;
+  --delete-button: #e74c3c;
+  --delete-button-hover: #c0392b;
+}
+
+/* Update existing styles to use variables */
+.table-container {
+  background: var(--table-bg) !important;
+}
+
+.table-cell, .table-header-cell {
+  background: var(--cell-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.add-player-button, .copy-to-clipboard-button {
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+}
+
+.add-katsching-button {
+  background: var(--button-bg) !important;
+}
+
+/* Update popup styles */
+.popup-content {
+  background: var(--popup-bg) !important;
+}
+
+.popup-input, .popup-comment {
+  background: var(--popup-input-bg) !important;
+  color: var(--popup-text) !important;
+}
+
+/* Update table styles */
+.MuiTableCell-head {
+  background-color: var(--table-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.MuiTableCell-body {
+  color: var(--text-color) !important;
+}
+
+/* Update success message */
+.success-message {
+  color: var(--success-color) !important;
+}
+
+/* Update delete button */
+.delete-button {
+  color: var(--delete-button) !important;
+}
+
+.delete-button:hover {
+  color: var(--delete-button-hover) !important;
+}
+
+/* Add smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+/* Update admin toggle styles for smoother transitions */
+.admin-toggle {
+  margin: 10px 0 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  color: #1a2634 !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+[data-theme='dark'] .admin-toggle {
+  color: #cb645f !important;
+}
+
+/* Add transition for admin mode elements */
+.add-player-button,
+.delete-button,
+.edit-button {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+}
+
+/* When elements are hidden */
+.add-player-button:not(:visible),
+.delete-button:not(:visible),
+.edit-button:not(:visible) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Smooth transition for admin-related table cells */
+.actions-cell {
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+}
+
+/* Update switch styles for smoother animation */
+.admin-toggle .MuiSwitch-root {
+  margin-right: 8px !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+.admin-toggle .MuiSwitch-track {
+  background-color: #89949F !important;
+  transition: background-color 0.3s ease-in-out !important;
+}
+
+.admin-toggle .MuiSwitch-thumb {
+  background-color: #DCDEE0 !important;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+}
+
+.admin-toggle .Mui-checked + .MuiSwitch-track {
+  background-color: #1EAB35 !important;
+  opacity: 0.5 !important;
+  transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+}
+
+.admin-toggle .Mui-checked .MuiSwitch-thumb {
+  background-color: #1EAB35 !important;
+  transition: background-color 0.3s ease-in-out !important;
 }
