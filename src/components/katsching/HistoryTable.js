@@ -5,7 +5,7 @@ import { DataStore } from 'aws-amplify/datastore';
 import { HistoryEntry } from '../../models';
 import './HistoryTable.css';
 
-const HistoryTable = ({ isAdmin, historyEntries, setHistoryEntries }) => {
+const HistoryTable = ({ isAdmin, historyEntries }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-GB', {
@@ -20,8 +20,6 @@ const HistoryTable = ({ isAdmin, historyEntries, setHistoryEntries }) => {
   const deleteHistoryEntry = async (entryId) => {
     try {
       await DataStore.delete(HistoryEntry, entryId);
-      // Update the UI immediately by filtering out the deleted entry
-      setHistoryEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
     } catch (err) {
       console.error("Error deleting history entry:", err);
     }

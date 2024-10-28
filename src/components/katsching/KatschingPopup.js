@@ -85,15 +85,15 @@ const KatschingPopup = ({ isVisible, togglePopup, addKatschings, selectedPlayer,
                 const newHistoryEntry = new HistoryEntry({
                     playerId: updatedPlayer.id,
                     time: new Date().toISOString(),
-                    // Update the event text to include who gave the katsching
-                    event: `${currentUser.username} gab 1 Katsching an ${updatedPlayer.name}`,
+                    // Include the player's emoji in the event text
+                    event: `${currentUser.username} gab 1 Katsching an ${updatedPlayer.name} ${updatedPlayer.emoji}`,
                     comments: comment,
                 });
 
                 await addKatschings(updatedPlayer, newHistoryEntry);
                 setComment('');
                 
-                setSuccessMessage(`${currentUser.username} hat ${selectedPlayer.name} einen Katsching gegeben!`);
+                setSuccessMessage(`${currentUser.username} hat ${selectedPlayer.name} ${selectedPlayer.emoji} einen Katsching gegeben!`);
                 setShowSuccess(true);
                 
                 setTimeout(() => {

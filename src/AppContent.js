@@ -309,6 +309,17 @@ function AppContent() {
     setIsDarkMode(prev => !prev);
   };
 
+  const clearDataStore = useCallback(async () => {
+    try {
+      await DataStore.clear();
+      console.log("DataStore cleared successfully");
+      // Optionally refresh the data after clearing
+      await fetchAllData();
+    } catch (err) {
+      console.error("Error clearing DataStore:", err);
+    }
+  }, [fetchAllData]);
+
   return (
     <View className="App">
       <button
@@ -400,8 +411,7 @@ function AppContent() {
               <Card className="history-table-container">
                 <HistoryTable 
                   isAdmin={isAdmin && adminModeEnabled}
-                  historyEntries={historyEntries}
-                  setHistoryEntries={setHistoryEntries} // Add this line
+                  historyEntries={historyEntries} 
                 />
               </Card>
               {isAuthenticated && (
@@ -440,17 +450,27 @@ function AppContent() {
         } />
       </Routes>
       {isAdmin && (
-        <FormControlLabel
-          control={
-            <Switch
-              checked={adminModeEnabled}
-              onChange={(e) => setAdminModeEnabled(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="Admin Mode"
-          className="admin-toggle"
-        />
+        <div className="admin-controls">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={adminModeEnabled}
+                onChange={(e) => setAdminModeEnabled(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="Admin Mode"
+            className="admin-toggle"
+          />
+          {adminModeEnabled && (
+            <Button 
+              onClick={clearDataStore}
+              className="clear-datastore-button"
+            >
+              Clear DataStore
+            </Button>
+          )}
+        </div>
       )}
     </View>
   );

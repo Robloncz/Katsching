@@ -31,11 +31,13 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow: visible;
 }
 
 .popup-container {
     border-radius: 10px;
     z-index: 1000;
+    overflow: visible;
 }
 
 .popup-content {
@@ -51,6 +53,7 @@
     align-items: center;
     gap: 17px;
     z-index: 1000;
+    overflow: visible;
 }
 
 .popup-title, .popup-label, .popup-subtitle {
@@ -88,6 +91,33 @@
     font-size: var(--font-size-main);
     font-family: var(--font-family-main);
     color: var(--text-color);
+}
+
+/* Update just the text color for dark mode inputs */
+[data-theme='dark'] .popup-name,
+[data-theme='dark'] .popup-comment {
+    color: #ffffff;  /* Bright white text */
+}
+
+/* Style for the placeholder text */
+[data-theme='dark'] .popup-name::placeholder,
+[data-theme='dark'] .popup-comment::placeholder {
+    color: #ecf0f1;  /* Light color for placeholder */
+    opacity: 0.7;    /* Slightly transparent */
+}
+
+/* Style for the actual input text when typing */
+[data-theme='dark'] .popup-name,
+[data-theme='dark'] .popup-comment {
+    color: #ecf0f1;  /* Light color for typed text */
+}
+
+/* Focus styles remain the same */
+[data-theme='dark'] .popup-name:focus,
+[data-theme='dark'] .popup-comment:focus {
+    background: #2d3748;
+    outline: 1px solid #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.3);
 }
 
 .popup-emoji {
@@ -198,7 +228,7 @@
 /* Add these styles to your existing Popup.css */
 
 .popup-emoji-picker {
-    position: sticky;
+    position: relative;
 }
 
 .selected-emoji {
@@ -228,4 +258,211 @@
     position: absolute;
     top: 100%; /* Adjust this value to place the picker above the selected emoji */
     z-index: 1000;
+}
+
+/* Remove the previous dark mode styles and just add this one */
+[data-theme='dark'] .popup-name input,
+[data-theme='dark'] .popup-comment {
+    background-color: #4a5568;
+    color: #ffffff !important;  /* Force white text color */
+}
+
+/* Remove all previous dark mode styles for the input and add this specific one */
+[data-theme='dark'] .popup-name {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+}
+
+[data-theme='dark'] input.popup-name {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+}
+
+[data-theme='dark'] textarea.popup-comment {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+}
+
+/* Remove all the previous dark mode styles and just use this specific selector */
+[data-theme='dark'] input.popup-name {
+    color: #ffffff !important;
+}
+
+/* Add these styles for the emoji search input */
+.emoji-search {
+    width: calc(100% - 16px);
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: var(--font-family-main);
+    background: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+[data-theme='dark'] .emoji-search {
+    background: #4a5568;
+    color: #ffffff;
+    border-color: #2d3748;
+}
+
+.emoji-search:focus {
+    outline: none;
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.3);
+}
+
+/* Update the emoji list positioning and size */
+.emoji-list {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    z-index: 2000;  /* Increased z-index to appear above popup */
+    width: 300px;
+    height: 350px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mobile optimization - adjust height for smaller screens */
+@media (max-width: 768px) {
+    .emoji-list {
+        height: 50vh;  /* Reduced from 60vh */
+        top: 35%;     /* Moved up slightly more on mobile */
+    }
+}
+
+.emoji-search {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    padding: 12px 16px;
+    margin: 0 0 12px 0;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    width: calc(100% - 36px);
+    transition: all 0.2s ease;
+}
+
+.emoji-search:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    outline: none;
+}
+
+.emoji-category {
+    margin-bottom: 16px;
+}
+
+.emoji-category-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
+    padding: 8px 4px;
+    margin-bottom: 8px;
+    position: sticky;
+    top: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.emoji-category-content {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    padding: 4px;
+}
+
+.emoji-option {
+    font-size: 24px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.emoji-option:hover {
+    background: #f7fafc;
+    transform: scale(1.2);
+}
+
+.emoji-list-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 1999;  /* Just below the emoji list but above other elements */
+}
+
+/* Dark mode styles */
+[data-theme='dark'] .emoji-list {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+}
+
+[data-theme='dark'] .emoji-search {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #ffffff;
+}
+
+[data-theme='dark'] .emoji-category-title {
+    background: #2d3748;
+    color: #e2e8f0;
+    border-bottom-color: #4a5568;
+}
+
+[data-theme='dark'] .emoji-option:hover {
+    background: #4a5568;
+}
+
+/* Custom scrollbar */
+.emoji-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.emoji-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.emoji-list::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+[data-theme='dark'] .emoji-list::-webkit-scrollbar-thumb {
+    background: #4a5568;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .emoji-list {
+        width: 90%;
+        max-width: 320px;
+        height: 60vh;
+    }
+
+    .emoji-category-content {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .emoji-option {
+        font-size: 20px;
+        height: 36px;
+    }
 }
