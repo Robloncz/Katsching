@@ -31,7 +31,7 @@ const KatschingTable = ({ players, isAdmin, toggleKatschingPopup, editKatschingS
           {players.map((player, index) => (
             <TableRow key={index}>
               <TableCell className="player-name-cell">
-                {player.name} {player.emoji}
+                {player.name} 
               </TableCell>
               <TableCell className="last-katsching-cell">
                 {player.lastKatsching ? formatDate(player.lastKatsching) : "No Katsching yet"}
